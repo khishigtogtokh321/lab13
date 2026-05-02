@@ -1,0 +1,84 @@
+openapi: 3.0.3
+info:
+  title: Mini Library API
+  version: 1.0.0
+paths:
+  /api/health:
+    get:
+      summary: Health check
+      responses:
+        "200":
+          description: Service is healthy
+  /api/books:
+    get:
+      summary: List books
+      parameters:
+        - in: query
+          name: query
+          schema:
+            type: string
+        - in: query
+          name: category
+          schema:
+            type: string
+        - in: query
+          name: availability
+          schema:
+            type: string
+            enum: [all, available, unavailable]
+      responses:
+        "200":
+          description: Book list
+    post:
+      summary: Create book
+      responses:
+        "201":
+          description: Book created
+        "400":
+          description: Validation error
+  /api/members:
+    get:
+      summary: List members
+      responses:
+        "200":
+          description: Member list
+    post:
+      summary: Create member
+      responses:
+        "201":
+          description: Member created
+        "400":
+          description: Validation error
+  /api/loans:
+    get:
+      summary: List loans
+      responses:
+        "200":
+          description: Loan list
+    post:
+      summary: Create loan
+      responses:
+        "201":
+          description: Loan created
+        "400":
+          description: Loan blocked
+  /api/loans/{id}/return:
+    patch:
+      summary: Return a loan
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Loan returned
+        "404":
+          description: Active loan not found
+  /api/dashboard/summary:
+    get:
+      summary: Dashboard summary
+      responses:
+        "200":
+          description: Aggregated counts
