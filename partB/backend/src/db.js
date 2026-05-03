@@ -1,12 +1,7 @@
-import pg from "pg";
+import { PrismaClient } from "@prisma/client";
 
-const { Pool } = pg;
+export const prisma = globalThis.__miniLibraryPrisma ?? new PrismaClient();
 
-export const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  max: 10
-});
-
-export async function query(text, params = []) {
-  return pool.query(text, params);
+if (process.env.NODE_ENV !== "production") {
+  globalThis.__miniLibraryPrisma = prisma;
 }

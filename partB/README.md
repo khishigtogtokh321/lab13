@@ -7,11 +7,13 @@
 - Loan creation and return workflow
 - Overdue loan status tracking
 - Dashboard summary metrics
+- Prisma ORM schema and Prisma Studio database UI
 
 ## Structure
 
 - `frontend/` - React + Tailwind UI
 - `backend/` - Express API and PostgreSQL schema
+- `../prisma/schema.prisma` - Prisma database model used by the backend
 - `shared/` - testable domain logic
 - `tests/` - Node.js unit tests
 - `openapi.yaml` - REST API specification
@@ -24,6 +26,7 @@ npm install
 npm run dev:frontend
 npm run dev:backend
 npm test
+npx prisma studio
 ```
 
 ## Environment

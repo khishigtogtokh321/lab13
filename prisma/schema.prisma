@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Book {
+  id              Int      @id @default(autoincrement())
+  title           String
+  author          String
+  isbn            String   @unique
+  category        String   @default("General")
+  totalCopies     Int      @map("total_copies")
+  availableCopies Int      @map("available_copies")
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  loans           Loan[]
+
+  @@index([title, author, isbn], map: "idx_books_search")
+  @@map("books")
+}
+
+model Member {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  phone     String   @default("")
+  status    String   @default("active")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  loans     Loan[]
+
+  @@map("members")
+}
+
+model Loan {
+  id         Int       @id @default(autoincrement())
+  bookId     Int       @map("book_id")
+  memberId   Int       @map("member_id")
+  borrowedAt DateTime  @map("borrowed_at") @db.Timestamptz(6)
+  dueAt      DateTime  @map("due_at") @db.Timestamptz(6)
+  returnedAt DateTime? @map("returned_at") @db.Timestamptz(6)
+  status     String
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  book       Book      @relation(fields: [bookId], references: [id], onDelete: Restrict)
+  member     Member    @relation(fields: [memberId], references: [id], onDelete: Restrict)
+
+  @@index([status, dueAt], map: "idx_loans_status_due")
+  @@map("loans")
+}

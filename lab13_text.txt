@@ -1,0 +1,212 @@
+F.CSM311 — Бие даалт 13 AI-Assisted Software Construction
+Багш: Агвааны ОТГОНБАЯР • otgonbayar.a@must.edu.mn хуудас 1ШУТИС — Мэдээлэл Холбооны Технологийн Сургууль
+F.CSM311 Программ хангамжийн бүтээлт
+БИЕ ДААЛТ 13
+AI-Assisted Software Construction
+Үндсэн мэдээлэл
+•Сэдэв: AI-Assisted Software Construction (Лекц 13)
+•Төрөл: Бие даалт (3 хэсэгтэй: А = Plan, Б = Build, В = Reflect)
+•Хугацаа: 2 долоо хоног
+•Үнэлгээ: Pass / Fail (доорх шалгуурын дагуу)
+•Хэрэгсэл: Claude Code (Anthropic plan), эсвэл Cursor / GitHub Copilot. Git, GitHub. 
+Сонгосон stack-ийн tooling.
+•Хүлээлгэх хэлбэр: GitHub repository-ийн линкийг Microsoft Teams-р илгээнэ (доор 
+дурдсан журмаар).
+Зорилго
+AI-тай хамтран ажиллах бодит workflow-г жижиг проект дээр дамжуулан эзэмших. Лекц 13-
+д үзсэн зарчмууд — Spec → Generate → Review → Integrate, CLAUDE.md, custom slash 
+commands, AI session log, hallucination/security шалгалт, ADR — бүгдийг практикт 
+ашиглана. Бид кодлогчийн "бичих" үүргээс "дизайн, верификаци, агуулга" руу шилжих 
+туршлагыг олж авна.
+Хэсгүүд (3)
+ХэсэгГарчиг Гол агуулга
+АPlan (Төлөвлөлт) Жижиг проектийн архитектур, stack, директор бүтэц, 
+CLAUDE.md, ADR — AI-тай хамтран бий болгох
+БBuild (Хэрэгжилт) Үндсэн 3-5 feature implement, custom slash 
+commands, тест, AI session log, Git workflow
+ВReflect 
+(Эргэцүүлэл)AI Usage Report, hallucination/security жишээ, 
+ADR-002, Self-evaluation
+А хэсэг — Plan (Төлөвлөлт)
+Жижиг проект сонгож, кодыг бичихээсээ ӨМНӨ ерөнхий зураглалыг AI-тай хамтран 
+тогтооно. Энэ хэсэгт код байх ёсгүй — зөвхөн документ, диаграм, шийдвэр.
+F.CSM311 — Бие даалт 13 AI-Assisted Software Construction
+Багш: Агвааны ОТГОНБАЯР • otgonbayar.a@must.edu.mn хуудас 2Сэдвийн сонголт (нэгийг сонгох)
+1.URL shortener — REST API + minimal frontend. Random short code, click counter, 
+expiration.
+2.Personal task tracker — task CRUD, due date, priority, label, search/filter.
+3.Markdown note-taking — note CRUD, full-text search, tag, export to PDF.
+4.Mini library — book inventory, member, loan tracking (Бие даалт 11-ийн өргөтгөл).
+5.Өөрийн санаа — багштай зөвшөөрөл авна. Нэг feature биш, ≥3 feature-тэй жижиг 
+систем байх ёстой.
+Хийх ажил
+1.AI-тай 3+ stack-ийг харьцуулж 1-ийг сонгох. Chat history-г товчилж хадгална.
+2.Architecture diagram (Mermaid) — module, layer, data flow.
+3.Director (folder) бүтэц тогтоох.
+4.README.md draft (зорилго, build, run, tests).
+5.CLAUDE.md үүсгэх (build commands, conventions, no-go zones, ≤200 мөр).
+6.ADR-001 — Stack сонголтын үндэслэл.
+7.AI планнинг session-ы chat history (хязгаарлаагүй ч товчилсон).
+Гаргах файлууд
+partA/PROJECT.md            — сонгосон сэдэв, brief, scope
+partA/ARCHITECTURE.md       — Mermaid diagram, module description
+partA/STACK-COMPARISON.md   — 3 stack харьцуулалт + сонгосон шалтгаан
+partA/README.md             — draft (бүрэн биш ч outline-тай)
+CLAUDE.md                   — repo root-д (build, conventions, no-go)
+partA/adr/0001-stack.md     — ADR format-аар
+partA/ai-sessions/plan.md   — chat history (товчилсон)
+Б хэсэг — Build (Хэрэгжилт)
+Сонгосон сэдвийн үндсэн 3-5 feature-ийг implement хийнэ. Зорилго нь "бүх юм гүйцэт" биш 
+— AI workflow-г бодит ажил дээр хэрэглэх. Quality > quantity.
+Custom slash command-ууд (≥4)
+Доорх slash command-уудаас ≥4-ийг үүсгэн .claude/commands/ дотор хадгална:
+•/review — security + robustness review (Lec12 + OWASP)
+•/test — testing pyramid-аар edge case-тэй тест
+•/docs — JSDoc + README хэсэг үүсгэх
+•/commit — Conventional Commits-аар commit message
+•/security — OWASP Top 10 шалгалт
+•/refactor — Lec07 паттернаар refactor
+•өөрийн санаа — төсөлд тохирох команд
+Хийх ажил
+1.Үндсэн 3-5 feature-ийг ажиллуулах хэмжээнд implement.
+F.CSM311 — Бие даалт 13 AI-Assisted Software Construction
+Багш: Агвааны ОТГОНБАЯР • otgonbayar.a@must.edu.mn хуудас 32.Unit test ≥10 (AI үүсгэсэн ч хүний review хийсэн).
+3.API project бол OpenAPI 3.0 spec auto-generate.
+4.AI session log — хамгаас чухал 3 session-ы товч хадгалах.
+5.CLAUDE.md-ийг build-ийн явцад шинэчилнэ.
+Git workflow
+•≥15 commit, ≥5 өөр өдөр (rush хийсэн нь fail-д хүргэнэ)
+•Conventional Commits format (feat, fix, docs, test, refactor, chore)
+•AI ашиглагдсан commit-уудад зарла. Жишээ: Co-Authored-By: Claude 
+<noreply@anthropic.com>
+•Feature branch ашиглавал илүү сайн (заавал биш)
+Гаргах файлууд
+partB/src/                  — эх код
+partB/tests/                — unit test-үүд
+.claude/commands/           — slash commands (≥4)
+partB/README.md             — бүрэн (build, run, test, structure)
+partB/openapi.yaml          — API project бол
+partB/ai-sessions/          — 3+ chat session log (товчилсон)
+В хэсэг — Reflect (Эргэцүүлэл)
+Энэ хэсэг нь Б-аас хамгийн чухал. AI-тай ажилласан туршлагаа задлан шинжилнэ — энэ 
+нь курсийн "verify, don't trust" зарчмын practical илрэл.
+AI Usage Report (≥1500 үг)
+Дараах асуултуудыг тус бүрд тайлбартай хариул:
+1.Юуг AI хийсэн, юуг өөрөө хийсэн? (хэсэг бүрд жишээтэй)
+2.Hallucination 2+ жишээ — AI ямар буруу зүйл санал болгосон? Та яаж олж зассан?
+3.Security/license-ийн анхаарал — 1+ жишээ. AI-аас гарсан код нь ямар нэгэн security 
+risk-тэй байсан уу?
+4.Юуг AI-аар хурдан хийсэн? (production benefit)
+5.Юуг AI-аар удаан хийсэн? (бэрхшээл, антипаттерн)
+6.Skill atrophy эрсдэлийг өөртөө яаж зохицуулсан? ("AI байхгүй" цаг гаргасан уу?)
+ADR-002 — Архитектурын чухал шийдвэр
+Build-ийн явцад тулгарсан нэг чухал шийдвэрийн талаар ADR бичнэ. AI-тай ярилцлагыг 
+тэмдэглэн, эцсийн шийдвэрийг үндэслэлтэй гарга.
+Self-evaluation
+Дараах асуултуудад үнэнч хариул:
+•Хэрэв шалгалт өнөөдөр болбол би энэ кодыг өөрөө бичиж чадах уу? (Тийм / Үгүй / 
+Хэсэгчлэн — тайлбартай)
+•Дахин хийнэ гэвэл юуг өөрөөр хийх вэ?  
+•Энэ туршлагаас юу сурсан бэ?  
+F.CSM311 — Бие даалт 13 AI-Assisted Software Construction
+Багш: Агвааны ОТГОНБАЯР • otgonbayar.a@must.edu.mn хуудас 4Гаргах файлууд
+partC/AI-USAGE-REPORT.md    — ≥1500 үг
+partC/adr/0002-*.md         — chosen decision
+partC/SELF-EVALUATION.md    — 3 асуултын хариу
+Repository-ийн бүтэц
+Доорх бүтцийг яг дагаарай — өөр бүтэц ашигласан бол шалгалтанд хүндрэл үүснэ.
+bie-daalt-13/
+├── README.md                  # Бүхэл проектийн танилцуулга
+├── CLAUDE.md                  # repo root — build, conventions
+├── .claude/
+│   └── commands/              # custom slash commands (≥4)
+│       ├── review.md
+│       ├── test.md
+│       └── ...
+│
+├── partA/                     # А — Plan
+│   ├── PROJECT.md
+│   ├── ARCHITECTURE.md
+│   ├── STACK-COMPARISON.md
+│   ├── README.md (draft)
+│   ├── adr/0001-stack-decision.md
+│   └── ai-sessions/plan.md
+│
+├── partB/                     # Б — Build
+│   ├── src/
+│   ├── tests/
+│   ├── README.md
+│   ├── openapi.yaml (API project бол)
+│   └── ai-sessions/
+│       ├── 01-feature-x.md
+│       ├── 02-debug-y.md
+│       └── 03-refactor-z.md
+│
+├── partC/                     # В — Reflect
+│   ├── AI-USAGE-REPORT.md
+F.CSM311 — Бие даалт 13 AI-Assisted Software Construction
+Багш: Агвааны ОТГОНБАЯР • otgonbayar.a@must.edu.mn хуудас 5│   ├── adr/0002-decision.md
+│   └── SELF-EVALUATION.md
+│
+└── .gitignore
+Pass / Fail шалгуур
+Pass болох нөхцөл (бүгд биелсэн байх):
+А хэсэг — бүгд биелсэн:
+ ☐PROJECT.md (зорилго, scope тодорхой)
+ ☐ARCHITECTURE.md (Mermaid diagram-тай)
+ ☐STACK-COMPARISON.md (3 stack харьцуулсан, сонгосон үндэслэл)
+ ☐CLAUDE.md (build, test, no-go zones)
+ ☐adr/0001 (стак сонголтын ADR)
+ ☐planning-session.md (AI chat-ийн товч)
+Б хэсэг — бүгд биелсэн:
+ ☐Үндсэн 3+ feature ажиллаж байгаа
+ ☐≥4 custom slash commands
+ ☐≥10 unit test pass болж байгаа
+ ☐≥15 commit, ≥5 өөр өдөр
+ ☐AI session log ≥3 файл
+ ☐Conventional Commits format
+ ☐AI ашиглалт зарласан (Co-Authored-By: Claude эсвэл commit body-д)
+В хэсэг — бүгд биелсэн:
+ ☐AI Usage Report (≥1500 үг, 6 асуултанд хариулсан)
+ ☐Hallucination 2+ жишээ, security 1+ жишээ
+ ☐ADR-002 (architectural decision)
+ ☐SELF-EVALUATION.md (3 асуултын хариу)
+Fail болох нөхцөл (нэг л биелэхэд):
+•А, Б, эсвэл В-ийн нэг хэсэг бүхэлдээ дутуу
+•Бүх ажил нэг өдрийн дотор хийгдсэн (Git history харуулна)
+•Нэг том commit (code dump)
+•AI ашигласан гэдгээ зарлаагүй
+•Хууран мэхэлсэн — AI үүсгэсэн text-ийг өөрөө бичсэн гэж зарласан
+•Хугацаа 5+ хоногоор хэтэрсэн
+Шударга байдал ба AI ашиглалт
+Энэ бие даалтын ОНЦЛОГ — AI ашиглах нь шаардлагатай. Гэхдээ дараах дүрмүүд 
+хүчинтэй:
+•AI ашиглах нь зорилго — нуух, хязгаарлах биш
+•AI үүсгэсэн зүйлийг ӨӨРИЙНХ гэж зарлахгүй (commit body, AI Usage Report-д үнэн 
+зарла)
+F.CSM311 — Бие даалт 13 AI-Assisted Software Construction
+Багш: Агвааны ОТГОНБАЯР • otgonbayar.a@must.edu.mn хуудас 6•Бүх chat session-ыг товчилсон форматаар хадгал — багш сонгож сорьж болно
+•Code-ынхоо тал бүрийг ӨӨРӨӨ тайлбарлаж чадах ёстой — AI "бичсэн" нь "чи 
+мэддэг" гэсэн үг биш
+•Шалгалт нь AI БАЙХГҮЙ явагдана — practical-аас дотоодын ойлголтыг сурах нь 
+чухал
+Зөвлөгөө
+1.Эхний өдрөө CLAUDE.md үүсгэ — бүх ажил үүн дээр тулгуурлана.
+2.Slash command-уудыг эрт үүсг — workflow-той хамт хөгжинө.
+3.AI session log-ыг chat дуусаагүй байхад нь хадгал — сүүлд хайвал төөрөгдөнө.
+4.Hallucination/security жишээ хайхдаа сэжигтэй сэтгэлгээтэй бай — AI бичсэн бүх 
+зүйлд эргэлзэж байж эрэг.
+5.Сүүлийн өдөр rush биш — ажил тодорхой үе шаттай явах нь Reflect хэсгийг 
+сайжруулна.
+6.Эргэлзэж байвал багштай Teams-р холбогдох — AI-аар үргэлж зөв зөвлөгөө 
+гарахгүй.
+Хүлээлгэх журам
+1.GitHub дээр шинэ public (эсвэл багшийг collaborator болгосон private) repository 
+үүсгэ — нэр: bie-daalt-13
+2.Дээрх бүтцийг дагаж бүх ажлыг commit, push хий
+3.Сүүлийн commit нь хугацаанд багтсан байх (Teams илгээсэн хугацаа биш, GitHub 
+дээрх commit-ийн хугацаа үнэлэгдэнэ)
+4.Microsoft Teams → F.CSM311 баг → Assignments → "Бие даалт 13"
+5."Add work" товчоор GitHub repo-ийн линкийг оруулах
+6."Turn in" товчийг ЗААВАЛ дар — turn in дараагүй бол ажил хүлээн авагдахгүй
+— Амжилт хүсье! —

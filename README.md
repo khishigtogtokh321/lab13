@@ -16,7 +16,7 @@ Mini library management system with book inventory, member management, loan/retu
 
 - Frontend: React + Tailwind CSS
 - Backend: Node.js + Express REST API
-- Database: PostgreSQL
+- Database: PostgreSQL + Prisma ORM
 - Testing: Node.js built-in test runner for domain logic
 
 ## Commands
@@ -27,6 +27,75 @@ npm run dev:frontend
 npm run dev:backend
 npm test
 npm run build
+```
+
+## Docker
+
+Run the full local stack with Docker Compose:
+
+```bash
+docker compose up --build
+```
+
+This creates:
+
+- `mini-library` - Node.js app container with React, Vite, Express, and project dependencies
+- `mini-library-postgres` - PostgreSQL container managed by Prisma schema sync
+
+Local URLs:
+
+- Frontend: `http://localhost:5173`
+- Backend health check: `http://localhost:4000/api/health`
+- PostgreSQL from host: `localhost:5433`
+- Prisma Studio: `http://localhost:5555`
+
+The app container uses this internal database URL:
+
+```bash
+postgres://postgres:postgres@db:5432/mini_library
+```
+
+To stop the stack:
+
+```bash
+docker compose down
+```
+
+To reset the PostgreSQL data volume and rerun schema initialization:
+
+```bash
+docker compose down -v
+docker compose up --build
+```
+
+If Vite/Rollup native dependency errors appear after changing Node packages, rebuild the app image without Docker cache:
+
+```bash
+docker compose build --no-cache app
+docker compose up
+```
+
+## Prisma
+
+Prisma is configured in `prisma/schema.prisma` and uses the same PostgreSQL database.
+
+For local host commands, create `.env` with:
+
+```bash
+DATABASE_URL=postgres://postgres:postgres@localhost:5433/mini_library
+```
+
+Then sync the schema and open the database UI:
+
+```bash
+npx prisma db push
+npx prisma studio
+```
+
+If you want Prisma Studio from inside Docker:
+
+```bash
+npm run docker:studio
 ```
 
 ## AI Use Disclosure

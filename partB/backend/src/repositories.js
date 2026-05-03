@@ -1,77 +1,87 @@
-import { query } from "./db.js";
-
-const bookFields = "id, title, author, isbn, category, total_copies AS \"totalCopies\", available_copies AS \"availableCopies\"";
-const memberFields = "id, name, email, phone, status";
-const loanFields =
-  "id, book_id AS \"bookId\", member_id AS \"memberId\", borrowed_at AS \"borrowedAt\", due_at AS \"dueAt\", returned_at AS \"returnedAt\", status";
+import { prisma } from "./db.js";
 
 export async function listBooks() {
-  const result = await query(`SELECT ${bookFields} FROM books ORDER BY title ASC`);
-  return result.rows;
+  return prisma.book.findMany({ orderBy: { title: "asc" } });
 }
 
 export async function findBookById(id) {
-  const result = await query(`SELECT ${bookFields} FROM books WHERE id = $1`, [id]);
-  return result.rows[0] ?? null;
+  return prisma.book.findUnique({ where: { id: Number(id) } });
 }
 
 export async function createBook(book) {
-  const result = await query(
-    `INSERT INTO books (title, author, isbn, category, total_copies, available_copies)
-     VALUES ($1, $2, $3, $4, $5, $6)
-     RETURNING ${bookFields}`,
-    [book.title, book.author, book.isbn, book.category, book.totalCopies, book.availableCopies]
-  );
-  return result.rows[0];
+  return prisma.book.create({
+    data: {
+      title: book.title,
+      author: book.author,
+      isbn: book.isbn,
+      category: book.category,
+      totalCopies: book.totalCopies,
+      availableCopies: book.availableCopies
+    }
+  });
 }
 
 export async function listMembers() {
-  const result = await query(`SELECT ${memberFields} FROM members ORDER BY name ASC`);
-  return result.rows;
+  return prisma.member.findMany({ orderBy: { name: "asc" } });
 }
 
 export async function findMemberById(id) {
-  const result = await query(`SELECT ${memberFields} FROM members WHERE id = $1`, [id]);
-  return result.rows[0] ?? null;
+  return prisma.member.findUnique({ where: { id: Number(id) } });
 }
 
 export async function createMember(member) {
-  const result = await query(
-    `INSERT INTO members (name, email, phone, status)
-     VALUES ($1, $2, $3, $4)
-     RETURNING ${memberFields}`,
-    [member.name, member.email, member.phone ?? "", member.status ?? "active"]
-  );
-  return result.rows[0];
+  return prisma.member.create({
+    data: {
+      name: member.name,
+      email: member.email,
+      phone: member.phone ?? "",
+      status: member.status ?? "active"
+    }
+  });
 }
 
 export async function listLoans() {
-  const result = await query(`SELECT ${loanFields} FROM loans ORDER BY borrowed_at DESC`);
-  return result.rows;
+  return prisma.loan.findMany({ orderBy: { borrowedAt: "desc" } });
 }
 
 export async function createLoan(loan) {
-  const result = await query(
-    `INSERT INTO loans (book_id, member_id, borrowed_at, due_at, returned_at, status)
-     VALUES ($1, $2, $3, $4, $5, $6)
-     RETURNING ${loanFields}`,
-    [loan.bookId, loan.memberId, loan.borrowedAt, loan.dueAt, loan.returnedAt, loan.status]
-  );
-  await query("UPDATE books SET available_copies = available_copies - 1 WHERE id = $1", [loan.bookId]);
-  return result.rows[0];
+  return prisma.$transaction(async (tx) => {
+    const created = await tx.loan.create({
+      data: {
+        bookId: loan.bookId,
+        memberId: loan.memberId,
+        borrowedAt: loan.borrowedAt,
+        dueAt: loan.dueAt,
+        returnedAt: loan.returnedAt,
+        status: loan.status
+      }
+    });
+    await tx.book.update({
+      where: { id: loan.bookId },
+      data: { availableCopies: { decrement: 1 } }
+    });
+    return created;
+  });
 }
 
 export async function returnLoan(id, returnedAt) {
-  const result = await query(
-    `UPDATE loans
-     SET returned_at = $2, status = 'returned'
-     WHERE id = $1 AND returned_at IS NULL
-     RETURNING ${loanFields}`,
-    [id, returnedAt]
-  );
-  const loan = result.rows[0] ?? null;
-  if (loan) {
-    await query("UPDATE books SET available_copies = available_copies + 1 WHERE id = $1", [loan.bookId]);
-  }
-  return loan;
+  return prisma.$transaction(async (tx) => {
+    const activeLoan = await tx.loan.findFirst({
+      where: { id: Number(id), returnedAt: null }
+    });
+    if (!activeLoan) return null;
+
+    const loan = await tx.loan.update({
+      where: { id: activeLoan.id },
+      data: {
+        returnedAt,
+        status: "returned"
+      }
+    });
+    await tx.book.update({
+      where: { id: loan.bookId },
+      data: { availableCopies: { increment: 1 } }
+    });
+    return loan;
+  });
 }
