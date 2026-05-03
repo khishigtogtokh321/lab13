@@ -29,6 +29,39 @@ npm test
 npm run build
 ```
 
+## Environment
+
+Create a local `.env` file from `.env.example` before running the backend or Prisma commands.
+
+Required production variables:
+
+- `DATABASE_URL` - PostgreSQL connection string used by Prisma.
+- `JWT_SECRET` - long random secret reserved for signed admin/auth tokens.
+- `ADMIN_EMAIL` - initial administrator email address.
+- `ADMIN_PASSWORD` - initial administrator password; use a strong secret outside development.
+- `PORT` - backend API port, usually `4000`.
+
+In development, the backend defaults to `PORT=4000`, but production startup validates all required variables.
+
+## Production Run
+
+This baseline runs the Express API and builds the React frontend as static assets. The generated frontend files are written to `dist/frontend` and should be served by a static host or reverse proxy.
+
+```bash
+npm ci
+npx prisma generate
+npx prisma db push
+npm run build
+NODE_ENV=production node partB/backend/src/server.js
+```
+
+For Windows PowerShell:
+
+```powershell
+$env:NODE_ENV="production"
+node partB/backend/src/server.js
+```
+
 ## Docker
 
 Run the full local stack with Docker Compose:
