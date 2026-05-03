@@ -7,45 +7,91 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum BookStatus {
+  active
+  archived
+}
+
+enum MemberStatus {
+  active
+  inactive
+}
+
+enum LoanStatus {
+  active
+  returned
+  overdue
+}
+
+enum AdminRole {
+  admin
+}
+
+enum AdminStatus {
+  active
+  disabled
+}
+
+model AdminUser {
+  id           Int         @id @default(autoincrement())
+  email        String      @unique @db.VarChar(255)
+  passwordHash String      @map("password_hash") @db.VarChar(255)
+  role         AdminRole   @default(admin)
+  status       AdminStatus @default(active)
+  createdAt    DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime    @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@index([status], map: "idx_admin_users_status")
+  @@map("admin_users")
+}
+
 model Book {
-  id              Int      @id @default(autoincrement())
-  title           String
-  author          String
-  isbn            String   @unique
-  category        String   @default("General")
-  totalCopies     Int      @map("total_copies")
-  availableCopies Int      @map("available_copies")
-  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  id              Int        @id @default(autoincrement())
+  title           String     @db.VarChar(200)
+  author          String     @db.VarChar(160)
+  isbn            String     @unique @db.VarChar(32)
+  category        String     @default("General") @db.VarChar(80)
+  status          BookStatus @default(active)
+  totalCopies     Int        @map("total_copies")
+  availableCopies Int        @map("available_copies")
+  createdAt       DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime   @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
   loans           Loan[]
 
   @@index([title, author, isbn], map: "idx_books_search")
+  @@index([status, category], map: "idx_books_status_category")
   @@map("books")
 }
 
 model Member {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  phone     String   @default("")
-  status    String   @default("active")
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  id        Int          @id @default(autoincrement())
+  name      String       @db.VarChar(160)
+  email     String       @unique @db.VarChar(255)
+  phone     String       @default("") @db.VarChar(40)
+  status    MemberStatus @default(active)
+  createdAt DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime     @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
   loans     Loan[]
 
+  @@index([status], map: "idx_members_status")
   @@map("members")
 }
 
 model Loan {
-  id         Int       @id @default(autoincrement())
-  bookId     Int       @map("book_id")
-  memberId   Int       @map("member_id")
-  borrowedAt DateTime  @map("borrowed_at") @db.Timestamptz(6)
-  dueAt      DateTime  @map("due_at") @db.Timestamptz(6)
-  returnedAt DateTime? @map("returned_at") @db.Timestamptz(6)
-  status     String
-  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
-  book       Book      @relation(fields: [bookId], references: [id], onDelete: Restrict)
-  member     Member    @relation(fields: [memberId], references: [id], onDelete: Restrict)
+  id         Int        @id @default(autoincrement())
+  bookId     Int        @map("book_id")
+  memberId   Int        @map("member_id")
+  borrowedAt DateTime   @map("borrowed_at") @db.Timestamptz(6)
+  dueAt      DateTime   @map("due_at") @db.Timestamptz(6)
+  returnedAt DateTime?  @map("returned_at") @db.Timestamptz(6)
+  status     LoanStatus @default(active)
+  createdAt  DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt  DateTime   @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  book       Book       @relation(fields: [bookId], references: [id], onDelete: Restrict)
+  member     Member     @relation(fields: [memberId], references: [id], onDelete: Restrict)
 
   @@index([status, dueAt], map: "idx_loans_status_due")
+  @@index([bookId, status], map: "idx_loans_book_status")
+  @@index([memberId, status], map: "idx_loans_member_status")
   @@map("loans")
 }

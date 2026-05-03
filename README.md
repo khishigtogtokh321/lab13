@@ -50,7 +50,7 @@ This baseline runs the Express API and builds the React frontend as static asset
 ```bash
 npm ci
 npx prisma generate
-npx prisma db push
+npx prisma migrate deploy
 npm run build
 NODE_ENV=production node partB/backend/src/server.js
 ```
@@ -118,12 +118,25 @@ For local host commands, create `.env` with:
 DATABASE_URL=postgres://postgres:postgres@localhost:5433/mini_library
 ```
 
-Then sync the schema and open the database UI:
+In development, sync the schema directly and open the database UI:
 
 ```bash
 npx prisma db push
 npx prisma studio
 ```
+
+Use `prisma db push` only for local development databases where schema reset is acceptable.
+
+For production, use a migration-style flow:
+
+```bash
+npx prisma migrate dev --name describe_schema_change
+git add prisma/schema.prisma prisma/migrations
+git commit -m "feat: add production database constraints"
+npx prisma migrate deploy
+```
+
+Production deployments should run `npx prisma migrate deploy`, not `npx prisma db push`. Review generated migration SQL before committing it, back up production data before applying database changes, and keep `DATABASE_URL` pointed at the intended production database only during deployment.
 
 If you want Prisma Studio from inside Docker:
 
