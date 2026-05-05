@@ -26,6 +26,7 @@ npm install
 npm run dev:frontend
 npm run dev:backend
 npm test
+npm run test:api-smoke
 npm run build
 ```
 
@@ -124,6 +125,14 @@ In development, sync the schema directly and open the database UI:
 npx prisma db push
 npx prisma studio
 ```
+
+Run the API smoke check after the backend is running:
+
+```bash
+npm run test:api-smoke
+```
+
+It uses `API_BASE_URL` when set, otherwise `http://localhost:4000`, and logs in with `ADMIN_EMAIL` / `ADMIN_PASSWORD`.
 
 Use `prisma db push` only for local development databases where schema reset is acceptable.
 

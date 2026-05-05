@@ -27,6 +27,7 @@ npm install
 npm run dev:frontend
 npm run dev:backend
 npm test
+npm run test:api-smoke
 npx prisma studio
 ```
 
@@ -49,3 +50,11 @@ Authentication endpoints:
 - `GET /api/auth/me`
 
 On first successful development login using `ADMIN_EMAIL` and `ADMIN_PASSWORD`, the backend creates the admin row with a bcrypt password hash.
+
+API smoke check:
+
+```bash
+npm run test:api-smoke
+```
+
+Run it while the backend is available. It checks health, auth login/me/logout, book/member creation, loan creation, loan extension, loan return, loan list, and dashboard summary.

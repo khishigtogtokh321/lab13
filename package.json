@@ -13,6 +13,7 @@
     "prisma:push": "prisma db push",
     "prisma:studio": "prisma studio",
     "test": "node --test \"partB/tests/**/*.test.js\"",
+    "test:api-smoke": "node partB/scripts/api-smoke.js",
     "build": "vite build partB/frontend --outDir ../../dist/frontend",
     "lint": "eslint partB --ext .js,.jsx"
   },
