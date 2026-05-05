@@ -80,61 +80,67 @@ export async function listLoans() {
 }
 
 export async function createLoan(loan) {
-  return prisma.$transaction(async (tx) => {
-    const created = await tx.loan.create({
-      data: {
-        bookId: loan.bookId,
-        memberId: loan.memberId,
-        borrowedAt: loan.borrowedAt,
-        dueAt: loan.dueAt,
-        returnedAt: loan.returnedAt,
-        status: loan.status
-      }
-    });
-    await tx.book.update({
-      where: { id: loan.bookId },
-      data: { availableCopies: { decrement: 1 } }
-    });
-    return created;
+  return prisma.$transaction((tx) => createLoanWithTx(tx, loan));
+}
+
+export async function createLoanWithTx(tx, loan) {
+  const created = await tx.loan.create({
+    data: {
+      bookId: loan.bookId,
+      memberId: loan.memberId,
+      borrowedAt: loan.borrowedAt,
+      dueAt: loan.dueAt,
+      returnedAt: loan.returnedAt,
+      status: loan.status
+    }
   });
+  await tx.book.update({
+    where: { id: loan.bookId },
+    data: { availableCopies: { decrement: 1 } }
+  });
+  return created;
 }
 
 export async function returnLoan(id, returnedAt) {
-  return prisma.$transaction(async (tx) => {
-    const activeLoan = await tx.loan.findFirst({
-      where: { id: Number(id), returnedAt: null }
-    });
-    if (!activeLoan) return null;
+  return prisma.$transaction((tx) => returnLoanWithTx(tx, id, returnedAt));
+}
 
-    const loan = await tx.loan.update({
-      where: { id: activeLoan.id },
-      data: {
-        returnedAt,
-        status: "returned"
-      }
-    });
-    await tx.book.update({
-      where: { id: loan.bookId },
-      data: { availableCopies: { increment: 1 } }
-    });
-    return loan;
+export async function returnLoanWithTx(tx, id, returnedAt) {
+  const activeLoan = await tx.loan.findFirst({
+    where: { id: Number(id), returnedAt: null }
   });
+  if (!activeLoan) return null;
+
+  const loan = await tx.loan.update({
+    where: { id: activeLoan.id },
+    data: {
+      returnedAt,
+      status: "returned"
+    }
+  });
+  await tx.book.update({
+    where: { id: loan.bookId },
+    data: { availableCopies: { increment: 1 } }
+  });
+  return loan;
 }
 
 export async function extendLoan(id, dueAt) {
-  return prisma.$transaction(async (tx) => {
-    const activeLoan = await tx.loan.findFirst({
-      where: { id: Number(id), returnedAt: null }
-    });
-    if (!activeLoan) return null;
+  return prisma.$transaction((tx) => extendLoanWithTx(tx, id, dueAt));
+}
 
-    return tx.loan.update({
-      where: { id: activeLoan.id },
-      data: {
-        dueAt,
-        status: "active"
-      }
-    });
+export async function extendLoanWithTx(tx, id, dueAt) {
+  const activeLoan = await tx.loan.findFirst({
+    where: { id: Number(id), returnedAt: null }
+  });
+  if (!activeLoan) return null;
+
+  return tx.loan.update({
+    where: { id: activeLoan.id },
+    data: {
+      dueAt,
+      status: "active"
+    }
   });
 }
 

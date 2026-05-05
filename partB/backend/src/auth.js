@@ -4,31 +4,17 @@ import jwt from "jsonwebtoken";
 import { Router } from "express";
 import { config } from "./config.js";
 import { createAdminUser, findAdminByEmail, findAdminById } from "./repositories.js";
-
-const AUTH_COOKIE_NAME = "mini_library_token";
-const TOKEN_EXPIRES_IN = "8h";
-const TOKEN_MAX_AGE_MS = 8 * 60 * 60 * 1000;
+import {
+  AUTH_COOKIE_NAME,
+  TOKEN_EXPIRES_IN,
+  authCookieOptions,
+  canBootstrapAdmin,
+  isActiveAdmin,
+  normalizeLoginCredentials,
+  publicAdmin
+} from "./authRules.js";
 
 export const parseAuthCookies = cookieParser();
-
-function authCookieOptions() {
-  return {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: config.isProduction,
-    maxAge: TOKEN_MAX_AGE_MS,
-    path: "/"
-  };
-}
-
-function publicAdmin(admin) {
-  return {
-    id: admin.id,
-    email: admin.email,
-    role: admin.role,
-    status: admin.status
-  };
-}
 
 function signAdminToken(admin) {
   return jwt.sign(
@@ -48,10 +34,12 @@ async function findOrBootstrapAdmin(email, password) {
   if (existingAdmin) return existingAdmin;
 
   if (
-    config.adminEmail &&
-    config.adminPassword &&
-    normalizedEmail === config.adminEmail &&
-    password === config.adminPassword
+    canBootstrapAdmin({
+      normalizedEmail,
+      password,
+      adminEmail: config.adminEmail,
+      adminPassword: config.adminPassword
+    })
   ) {
     const passwordHash = await bcrypt.hash(password, 12);
     return createAdminUser({ email: normalizedEmail, passwordHash });
@@ -62,7 +50,7 @@ async function findOrBootstrapAdmin(email, password) {
 
 async function authenticateAdmin(email, password) {
   const admin = await findOrBootstrapAdmin(email, password);
-  if (!admin || admin.status !== "active") return null;
+  if (!isActiveAdmin(admin)) return null;
 
   const isPasswordValid = await bcrypt.compare(password, admin.passwordHash);
   return isPasswordValid ? admin : null;
@@ -75,7 +63,7 @@ export async function getCurrentAdmin(req) {
   try {
     const payload = jwt.verify(token, config.jwtSecret);
     const admin = await findAdminById(payload.sub);
-    if (!admin || admin.status !== "active") return null;
+    if (!isActiveAdmin(admin)) return null;
     return admin;
   } catch {
     return null;
@@ -87,8 +75,7 @@ export function createAuthRouter() {
 
   router.post("/login", async (req, res, next) => {
     try {
-      const email = String(req.body?.email ?? "").trim().toLowerCase();
-      const password = String(req.body?.password ?? "");
+      const { email, password } = normalizeLoginCredentials(req.body);
 
       if (!email || !password) {
         return res.status(400).json({ errors: ["Имэйл болон нууц үгээ оруулна уу."] });
@@ -99,7 +86,7 @@ export function createAuthRouter() {
         return res.status(401).json({ errors: ["Имэйл эсвэл нууц үг буруу байна."] });
       }
 
-      res.cookie(AUTH_COOKIE_NAME, signAdminToken(admin), authCookieOptions());
+      res.cookie(AUTH_COOKIE_NAME, signAdminToken(admin), authCookieOptions({ isProduction: config.isProduction }));
       res.json({ user: publicAdmin(admin) });
     } catch (error) {
       next(error);
@@ -107,7 +94,7 @@ export function createAuthRouter() {
   });
 
   router.post("/logout", (_req, res) => {
-    res.clearCookie(AUTH_COOKIE_NAME, { ...authCookieOptions(), maxAge: undefined });
+    res.clearCookie(AUTH_COOKIE_NAME, { ...authCookieOptions({ isProduction: config.isProduction }), maxAge: undefined });
     res.json({ ok: true });
   });
 
