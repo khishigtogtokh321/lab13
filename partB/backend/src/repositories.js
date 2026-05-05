@@ -60,7 +60,23 @@ export async function createMember(member) {
 }
 
 export async function listLoans() {
-  return prisma.loan.findMany({ orderBy: { borrowedAt: "desc" } });
+  return prisma.loan.findMany({
+    include: {
+      book: {
+        select: {
+          id: true,
+          title: true
+        }
+      },
+      member: {
+        select: {
+          id: true,
+          name: true
+        }
+      }
+    },
+    orderBy: { borrowedAt: "desc" }
+  });
 }
 
 export async function createLoan(loan) {

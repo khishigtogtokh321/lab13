@@ -3,6 +3,7 @@ import cors from "cors";
 import { createAuthRouter, parseAuthCookies } from "./auth.js";
 import {
   createLoanRecord,
+  computeLoanStatus,
   filterBooks,
   summarizeDashboard,
   validateBookInput,
@@ -73,7 +74,8 @@ export function createApp() {
 
   app.get("/api/loans", async (_req, res, next) => {
     try {
-      res.json(await listLoans());
+      const loans = await listLoans();
+      res.json(loans.map((loan) => ({ ...loan, status: computeLoanStatus(loan) })));
     } catch (error) {
       next(error);
     }

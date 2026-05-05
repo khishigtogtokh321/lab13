@@ -1,7 +1,28 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { BookOpen, ClipboardList, Library, Search, Users } from "lucide-react";
+import { BookOpen, ClipboardList, Library, LogOut, Search, ShieldCheck, Users } from "lucide-react";
 import "./styles.css";
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:4000";
+
+async function authRequest(path, options = {}) {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+      ...options.headers
+    },
+    ...options
+  });
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    const message = data.errors?.[0] ?? "Request failed.";
+    throw new Error(message);
+  }
+
+  return data;
+}
 
 const initialBooks = [
   { id: 1, title: "Clean Architecture", author: "Robert C. Martin", isbn: "978-0134494166", category: "Software", totalCopies: 5, availableCopies: 3 },
@@ -22,6 +43,136 @@ const loans = [
 ];
 
 function App() {
+  const [authState, setAuthState] = useState("checking");
+  const [admin, setAdmin] = useState(null);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    authRequest("/api/auth/me")
+      .then(({ user }) => {
+        if (!isMounted) return;
+        setAdmin(user);
+        setAuthState("authenticated");
+      })
+      .catch(() => {
+        if (!isMounted) return;
+        setAdmin(null);
+        setAuthState("login");
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  async function handleLogin(credentials) {
+    const { user } = await authRequest("/api/auth/login", {
+      method: "POST",
+      body: JSON.stringify(credentials)
+    });
+    setAdmin(user);
+    setAuthState("authenticated");
+  }
+
+  async function handleLogout() {
+    try {
+      await authRequest("/api/auth/logout", { method: "POST" });
+    } finally {
+      setAdmin(null);
+      setAuthState("login");
+    }
+  }
+
+  if (authState === "checking") {
+    return (
+      <div className="grid min-h-screen place-items-center bg-white px-4 text-slate-950">
+        <div className="flex items-center gap-3 text-sm font-medium text-slate-600">
+          <ShieldCheck className="text-teal-700" size={20} />
+          Checking admin session...
+        </div>
+      </div>
+    );
+  }
+
+  if (authState !== "authenticated") {
+    return <LoginScreen onLogin={handleLogin} />;
+  }
+
+  return <Dashboard admin={admin} onLogout={handleLogout} />;
+}
+
+function LoginScreen({ onLogin }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+    setError("");
+    setIsSubmitting(true);
+
+    try {
+      await onLogin({ email, password });
+    } catch (loginError) {
+      setError(loginError.message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
+  return (
+    <div className="login-shell">
+      <form className="login-panel" onSubmit={handleSubmit}>
+        <div className="flex items-center gap-3">
+          <div className="grid h-11 w-11 place-items-center rounded-lg bg-teal-700 text-white">
+            <Library size={23} />
+          </div>
+          <div>
+            <h1 className="text-xl font-semibold tracking-normal text-slate-950">Admin login</h1>
+            <p className="text-sm text-slate-500">Sign in to manage Mini Library.</p>
+          </div>
+        </div>
+
+        <div className="mt-7 space-y-4">
+          <div>
+            <label className="field-label" htmlFor="email">Email</label>
+            <input
+              id="email"
+              className="input"
+              type="email"
+              autoComplete="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <label className="field-label" htmlFor="password">Password</label>
+            <input
+              id="password"
+              className="input"
+              type="password"
+              autoComplete="current-password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              required
+            />
+          </div>
+        </div>
+
+        {error ? <p className="mt-4 rounded-md bg-red-50 px-3 py-2 text-sm font-medium text-red-700">{error}</p> : null}
+
+        <button className="primary-button mt-6" type="submit" disabled={isSubmitting}>
+          {isSubmitting ? "Signing in..." : "Login"}
+        </button>
+      </form>
+    </div>
+  );
+}
+
+function Dashboard({ admin, onLogout }) {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("all");
   const [selectedBookId, setSelectedBookId] = useState(initialBooks[0].id);
@@ -93,11 +244,17 @@ function App() {
           <header className="flex items-center justify-between gap-4 border-b border-slate-200 pb-5 max-md:flex-col max-md:items-stretch">
             <div>
               <h1 className="text-2xl font-semibold tracking-normal">Library operations dashboard</h1>
-              <p className="mt-1 text-sm text-slate-500">Manage inventory, members, active loans, and overdue returns.</p>
+              <p className="mt-1 text-sm text-slate-500">Signed in as {admin?.email}. Manage inventory, members, active loans, and overdue returns.</p>
             </div>
-            <div className="relative w-80 max-md:w-full">
-              <Search className="absolute left-3 top-2.5 text-slate-400" size={18} />
-              <input className="input pl-10" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search inventory" />
+            <div className="flex items-center gap-3 max-md:w-full">
+              <div className="relative w-80 max-md:w-full">
+                <Search className="absolute left-3 top-2.5 text-slate-400" size={18} />
+                <input className="input pl-10" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search inventory" />
+              </div>
+              <button className="outline-button" type="button" onClick={onLogout} aria-label="Logout">
+                <LogOut size={17} />
+                Logout
+              </button>
             </div>
           </header>
 
