@@ -49,6 +49,9 @@ export function createApp() {
       const book = await createBook(req.body);
       res.status(201).json(book);
     } catch (error) {
+      if (error.code === "P2002") {
+        return res.status(400).json({ errors: ["Ийм ISBN-тэй ном өмнө нь бүртгэгдсэн байна."] });
+      }
       next(error);
     }
   });
@@ -68,6 +71,9 @@ export function createApp() {
       const member = await createMember(req.body);
       res.status(201).json(member);
     } catch (error) {
+      if (error.code === "P2002") {
+        return res.status(400).json({ errors: ["Ийм имэйлтэй гишүүн өмнө нь бүртгэгдсэн байна."] });
+      }
       next(error);
     }
   });
@@ -87,7 +93,14 @@ export function createApp() {
       const loan = createLoanRecord({ book, member, borrowedAt: req.body.borrowedAt ?? new Date(), days: req.body.days ?? 14 });
       res.status(201).json(await createLoan(loan));
     } catch (error) {
-      if (["Book not found.", "Member not found.", "Member is not active.", "No available copies."].includes(error.message)) {
+      if (
+        [
+          "Сонгосон ном олдсонгүй.",
+          "Сонгосон гишүүн олдсонгүй.",
+          "Идэвхгүй гишүүнд ном зээлүүлэх боломжгүй.",
+          "Энэ номын бэлэн хувь дууссан байна."
+        ].includes(error.message)
+      ) {
         return res.status(400).json({ errors: [error.message] });
       }
       next(error);
@@ -97,7 +110,7 @@ export function createApp() {
   app.patch("/api/loans/:id/return", async (req, res, next) => {
     try {
       const loan = await returnLoan(req.params.id, req.body.returnedAt ?? new Date());
-      if (!loan) return res.status(404).json({ errors: ["Active loan not found."] });
+      if (!loan) return res.status(404).json({ errors: ["Буцаах боломжтой идэвхтэй зээлэлт олдсонгүй."] });
       res.json(loan);
     } catch (error) {
       next(error);
@@ -115,7 +128,7 @@ export function createApp() {
 
   app.use((error, _req, res, _next) => {
     console.error(error);
-    res.status(500).json({ errors: ["Unexpected server error."] });
+    res.status(500).json({ errors: ["Сервер дээр алдаа гарлаа. Дахин оролдоно уу."] });
   });
 
   return app;

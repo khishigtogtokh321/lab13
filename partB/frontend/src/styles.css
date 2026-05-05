@@ -13,6 +13,10 @@
     @apply rounded-lg border border-slate-200 bg-white p-5 shadow-sm;
   }
 
+  .action-tile {
+    @apply min-h-28 rounded-lg border border-slate-200 bg-slate-50 p-4 text-left transition hover:border-teal-200 hover:bg-teal-50 focus:outline-none focus:ring-2 focus:ring-teal-100;
+  }
+
   .login-shell {
     @apply grid min-h-screen place-items-center bg-slate-50 px-4 py-8 text-slate-950;
   }
@@ -57,6 +61,26 @@
     @apply inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-md border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-teal-100;
   }
 
+  .outline-button:disabled {
+    @apply cursor-not-allowed border-slate-200 text-slate-400 hover:border-slate-200 hover:bg-white;
+  }
+
+  .icon-button {
+    @apply inline-grid h-9 w-9 shrink-0 place-items-center rounded-md border border-slate-300 bg-white text-slate-600 transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-teal-100;
+  }
+
+  .icon-button:disabled {
+    @apply cursor-not-allowed text-slate-300 hover:bg-white;
+  }
+
+  .small-button {
+    @apply inline-flex h-8 shrink-0 items-center justify-center rounded-md bg-teal-700 px-3 text-xs font-semibold text-white transition hover:bg-teal-800 focus:outline-none focus:ring-2 focus:ring-teal-100;
+  }
+
+  .small-button:disabled {
+    @apply cursor-not-allowed bg-slate-400 hover:bg-slate-400;
+  }
+
   .status {
     @apply inline-flex items-center rounded-md px-2 py-1 text-xs font-semibold;
   }
@@ -69,7 +93,11 @@
     @apply bg-amber-50 text-amber-800;
   }
 
+  .status-muted {
+    @apply bg-slate-100 text-slate-600;
+  }
+
   .loan-row {
-    @apply flex items-center justify-between gap-3 rounded-lg border border-slate-100 p-3;
+    @apply flex items-center justify-between gap-3 rounded-lg border border-slate-100 p-3 max-sm:flex-col max-sm:items-stretch;
   }
 }

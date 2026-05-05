@@ -91,12 +91,12 @@ export function createAuthRouter() {
       const password = String(req.body?.password ?? "");
 
       if (!email || !password) {
-        return res.status(400).json({ errors: ["Email and password are required."] });
+        return res.status(400).json({ errors: ["Имэйл болон нууц үгээ оруулна уу."] });
       }
 
       const admin = await authenticateAdmin(email, password);
       if (!admin) {
-        return res.status(401).json({ errors: ["Invalid email or password."] });
+        return res.status(401).json({ errors: ["Имэйл эсвэл нууц үг буруу байна."] });
       }
 
       res.cookie(AUTH_COOKIE_NAME, signAdminToken(admin), authCookieOptions());

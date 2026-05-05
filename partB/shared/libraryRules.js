@@ -6,28 +6,28 @@ export const LOAN_STATUSES = {
 
 export function validateBookInput(input) {
   const errors = [];
-  if (!input.title || input.title.trim().length < 2) errors.push("Title is required.");
-  if (!input.author || input.author.trim().length < 2) errors.push("Author is required.");
-  if (!input.isbn || !/^[0-9-]{10,17}$/.test(input.isbn)) errors.push("ISBN must contain 10-17 digits or hyphens.");
-  if (!Number.isInteger(input.totalCopies) || input.totalCopies < 1) errors.push("Total copies must be at least 1.");
-  if (!Number.isInteger(input.availableCopies) || input.availableCopies < 0) errors.push("Available copies cannot be negative.");
-  if (input.availableCopies > input.totalCopies) errors.push("Available copies cannot exceed total copies.");
+  if (!input.title || input.title.trim().length < 2) errors.push("Номын нэрийг 2-оос дээш тэмдэгтээр оруулна уу.");
+  if (!input.author || input.author.trim().length < 2) errors.push("Зохиогчийн нэрийг 2-оос дээш тэмдэгтээр оруулна уу.");
+  if (!input.isbn || !/^[0-9-]{10,17}$/.test(input.isbn)) errors.push("ISBN нь 10-17 оронтой тоо эсвэл зураас (-) агуулсан байх ёстой.");
+  if (!Number.isInteger(input.totalCopies) || input.totalCopies < 1) errors.push("Нийт хувь хамгийн багадаа 1 байх ёстой.");
+  if (!Number.isInteger(input.availableCopies) || input.availableCopies < 0) errors.push("Бэлэн хувь 0-ээс бага байж болохгүй.");
+  if (input.availableCopies > input.totalCopies) errors.push("Бэлэн хувь нийт хувиас их байж болохгүй.");
   return errors;
 }
 
 export function validateMemberInput(input) {
   const errors = [];
-  if (!input.name || input.name.trim().length < 2) errors.push("Member name is required.");
-  if (!input.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.email)) errors.push("Valid email is required.");
-  if (input.status && !["active", "inactive"].includes(input.status)) errors.push("Invalid member status.");
+  if (!input.name || input.name.trim().length < 2) errors.push("Гишүүний нэрийг 2-оос дээш тэмдэгтээр оруулна уу.");
+  if (!input.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.email)) errors.push("Зөв имэйл хаяг оруулна уу.");
+  if (input.status && !["active", "inactive"].includes(input.status)) errors.push("Гишүүний төлөв буруу байна.");
   return errors;
 }
 
 export function canLoanBook(book, member) {
-  if (!book) return { ok: false, reason: "Book not found." };
-  if (!member) return { ok: false, reason: "Member not found." };
-  if (member.status !== "active") return { ok: false, reason: "Member is not active." };
-  if (book.availableCopies < 1) return { ok: false, reason: "No available copies." };
+  if (!book) return { ok: false, reason: "Сонгосон ном олдсонгүй." };
+  if (!member) return { ok: false, reason: "Сонгосон гишүүн олдсонгүй." };
+  if (member.status !== "active") return { ok: false, reason: "Идэвхгүй гишүүнд ном зээлүүлэх боломжгүй." };
+  if (book.availableCopies < 1) return { ok: false, reason: "Энэ номын бэлэн хувь дууссан байна." };
   return { ok: true };
 }
 
@@ -48,8 +48,8 @@ export function createLoanRecord({ book, member, borrowedAt, days = 14 }) {
 }
 
 export function returnLoanRecord(loan, returnedAt) {
-  if (!loan) throw new Error("Loan not found.");
-  if (loan.returnedAt) throw new Error("Loan already returned.");
+  if (!loan) throw new Error("Зээлэлтийн бүртгэл олдсонгүй.");
+  if (loan.returnedAt) throw new Error("Энэ зээлэлт аль хэдийн буцаагдсан байна.");
   return {
     ...loan,
     returnedAt: new Date(returnedAt).toISOString(),

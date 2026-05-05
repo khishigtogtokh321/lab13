@@ -22,11 +22,11 @@ test("valid book input returns no errors", () => {
 
 test("book validation rejects invalid copy counts", () => {
   const errors = validateBookInput({ ...availableBook, totalCopies: 1, availableCopies: 2 });
-  assert.ok(errors.includes("Available copies cannot exceed total copies."));
+  assert.ok(errors.includes("Бэлэн хувь нийт хувиас их байж болохгүй."));
 });
 
 test("member validation requires valid email", () => {
-  assert.ok(validateMemberInput({ name: "Ariun", email: "bad", status: "active" }).includes("Valid email is required."));
+  assert.ok(validateMemberInput({ name: "Ariun", email: "bad", status: "active" }).includes("Зөв имэйл хаяг оруулна уу."));
 });
 
 test("active member can loan an available book", () => {
@@ -34,11 +34,11 @@ test("active member can loan an available book", () => {
 });
 
 test("inactive member cannot borrow", () => {
-  assert.equal(canLoanBook(availableBook, inactiveMember).reason, "Member is not active.");
+  assert.equal(canLoanBook(availableBook, inactiveMember).reason, "Идэвхгүй гишүүнд ном зээлүүлэх боломжгүй.");
 });
 
 test("unavailable book cannot be loaned", () => {
-  assert.equal(canLoanBook(unavailableBook, activeMember).reason, "No available copies.");
+  assert.equal(canLoanBook(unavailableBook, activeMember).reason, "Энэ номын бэлэн хувь дууссан байна.");
 });
 
 test("createLoanRecord sets due date using loan period", () => {
