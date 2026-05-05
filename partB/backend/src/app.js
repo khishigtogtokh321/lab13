@@ -113,7 +113,7 @@ export function createApp() {
 
   app.patch("/api/loans/:id/return", async (req, res, next) => {
     try {
-      const loan = await returnLoan(req.params.id, req.body.returnedAt ?? new Date());
+      const loan = await returnLoan(req.params.id, req.body?.returnedAt ?? new Date());
       if (!loan) return res.status(404).json({ errors: ["Буцаах боломжтой идэвхтэй зээлэлт олдсонгүй."] });
       res.json(loan);
     } catch (error) {
