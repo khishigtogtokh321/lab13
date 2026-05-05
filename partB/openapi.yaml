@@ -9,6 +9,43 @@ paths:
       responses:
         "200":
           description: Service is healthy
+  /api/auth/login:
+    post:
+      summary: Login as an administrator
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+      responses:
+        "200":
+          description: Login succeeded and an httpOnly JWT cookie was set
+        "400":
+          description: Missing credentials
+        "401":
+          description: Invalid credentials
+  /api/auth/logout:
+    post:
+      summary: Logout current administrator
+      responses:
+        "200":
+          description: Auth cookie cleared
+  /api/auth/me:
+    get:
+      summary: Return the current administrator from the auth cookie
+      responses:
+        "200":
+          description: Current administrator
+        "401":
+          description: Missing or invalid auth cookie
   /api/books:
     get:
       summary: List books

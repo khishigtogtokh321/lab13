@@ -9,8 +9,9 @@ const REQUIRED_PRODUCTION_ENV = [
 export function loadConfig(env = process.env) {
   const missing = REQUIRED_PRODUCTION_ENV.filter((key) => !env[key]);
   const port = Number(env.PORT ?? 4000);
+  const isProduction = env.NODE_ENV === "production";
 
-  if (env.NODE_ENV === "production" && missing.length > 0) {
+  if (isProduction && missing.length > 0) {
     throw new Error(`Missing required production environment variables: ${missing.join(", ")}`);
   }
 
@@ -20,9 +21,10 @@ export function loadConfig(env = process.env) {
 
   return {
     databaseUrl: env.DATABASE_URL,
-    jwtSecret: env.JWT_SECRET,
-    adminEmail: env.ADMIN_EMAIL,
+    jwtSecret: env.JWT_SECRET ?? "dev-only-mini-library-auth-secret",
+    adminEmail: env.ADMIN_EMAIL?.toLowerCase(),
     adminPassword: env.ADMIN_PASSWORD,
+    isProduction,
     port
   };
 }

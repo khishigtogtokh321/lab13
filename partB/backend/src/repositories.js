@@ -4,6 +4,25 @@ export async function listBooks() {
   return prisma.book.findMany({ orderBy: { title: "asc" } });
 }
 
+export async function findAdminByEmail(email) {
+  return prisma.adminUser.findUnique({ where: { email: email.toLowerCase() } });
+}
+
+export async function findAdminById(id) {
+  return prisma.adminUser.findUnique({ where: { id: Number(id) } });
+}
+
+export async function createAdminUser(admin) {
+  return prisma.adminUser.create({
+    data: {
+      email: admin.email.toLowerCase(),
+      passwordHash: admin.passwordHash,
+      role: admin.role ?? "admin",
+      status: admin.status ?? "active"
+    }
+  });
+}
+
 export async function findBookById(id) {
   return prisma.book.findUnique({ where: { id: Number(id) } });
 }

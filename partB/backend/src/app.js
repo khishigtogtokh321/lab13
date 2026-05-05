@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import { createAuthRouter, parseAuthCookies } from "./auth.js";
 import {
   createLoanRecord,
   filterBooks,
@@ -21,12 +22,15 @@ import {
 
 export function createApp() {
   const app = express();
-  app.use(cors());
+  app.use(cors({ origin: true, credentials: true }));
   app.use(express.json());
+  app.use(parseAuthCookies);
 
   app.get("/api/health", (_req, res) => {
     res.json({ ok: true, service: "mini-library-api" });
   });
+
+  app.use("/api/auth", createAuthRouter());
 
   app.get("/api/books", async (req, res, next) => {
     try {
