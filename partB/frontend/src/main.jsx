@@ -203,6 +203,8 @@ function LibraryApp({ admin, onLogout, onSessionExpired }) {
   });
   const [selectedBookId, setSelectedBookId] = useState("");
   const [selectedMemberId, setSelectedMemberId] = useState("");
+  const [loanDays, setLoanDays] = useState(14);
+  const [extendDaysByLoan, setExtendDaysByLoan] = useState({});
   const [message, setMessage] = useState("Систем бэлэн байна.");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -382,11 +384,33 @@ function LibraryApp({ admin, onLogout, onSessionExpired }) {
           method: "POST",
           body: JSON.stringify({
             bookId: Number(selectedBookId),
-            memberId: Number(selectedMemberId)
+            memberId: Number(selectedMemberId),
+            days: Number(loanDays)
           })
         }),
       `${member?.name ?? "Гишүүн"} - "${book?.title ?? "ном"}" зээлэлт үүслээ.`
     );
+  }
+
+  function updateExtendDays(loanId, value) {
+    setExtendDaysByLoan((current) => ({ ...current, [loanId]: value }));
+  }
+
+  function handleExtendLoan(loan) {
+    const days = Number(extendDaysByLoan[loan.id] ?? 7);
+
+    runWorkflow(
+      () =>
+        apiRequest(`/api/loans/${loan.id}/extend`, {
+          method: "PATCH",
+          body: JSON.stringify({ days })
+        }),
+      `"${loan.book?.title ?? `#${loan.bookId}`}" зээлэлт ${days} хоногоор сунгагдлаа.`
+    ).then((ok) => {
+      if (ok) {
+        setExtendDaysByLoan((current) => ({ ...current, [loan.id]: 7 }));
+      }
+    });
   }
 
   function handleReturnLoan(loan) {
@@ -489,11 +513,16 @@ function LibraryApp({ admin, onLogout, onSessionExpired }) {
               openLoans={openLoans}
               selectedBookId={selectedBookId}
               selectedMemberId={selectedMemberId}
+              loanDays={loanDays}
+              extendDaysByLoan={extendDaysByLoan}
               isSaving={isSaving}
               onBookChange={setSelectedBookId}
               onMemberChange={setSelectedMemberId}
+              onLoanDaysChange={setLoanDays}
+              onExtendDaysChange={updateExtendDays}
               onCreateLoan={handleCreateLoan}
               onReturnLoan={handleReturnLoan}
+              onExtendLoan={handleExtendLoan}
             />
           ) : null}
         </main>
@@ -629,11 +658,16 @@ function LoansPage({
   openLoans,
   selectedBookId,
   selectedMemberId,
+  loanDays,
+  extendDaysByLoan,
   isSaving,
   onBookChange,
   onMemberChange,
+  onLoanDaysChange,
+  onExtendDaysChange,
   onCreateLoan,
-  onReturnLoan
+  onReturnLoan,
+  onExtendLoan
 }) {
   return (
     <div className="mt-6 grid grid-cols-[380px_1fr] gap-6 max-xl:grid-cols-1">
@@ -651,6 +685,17 @@ function LoansPage({
             <option key={member.id} value={member.id}>{member.name}</option>
           ))}
         </select>
+        <label className="field-label mt-4" htmlFor="loan-days">Зээлэх хугацаа (хоног)</label>
+        <input
+          id="loan-days"
+          className="input"
+          type="number"
+          min="1"
+          max="365"
+          value={loanDays}
+          onChange={(event) => onLoanDaysChange(event.target.value)}
+          required
+        />
         <button className="primary-button mt-5" type="submit" disabled={isSaving || !selectedBookId || !selectedMemberId}>
           Зээлэлт үүсгэх
         </button>
@@ -659,7 +704,15 @@ function LoansPage({
       <section className="space-y-6">
         <div className="panel">
           <h2 className="section-title">Буцаагдаагүй зээлэлт</h2>
-          <LoanList loans={openLoans} isSaving={isSaving} onReturnLoan={onReturnLoan} emptyText="Буцаагдаагүй зээлэлт алга." />
+          <LoanList
+            loans={openLoans}
+            isSaving={isSaving}
+            extendDaysByLoan={extendDaysByLoan}
+            onExtendDaysChange={onExtendDaysChange}
+            onExtendLoan={onExtendLoan}
+            onReturnLoan={onReturnLoan}
+            emptyText="Буцаагдаагүй зээлэлт алга."
+          />
         </div>
         <div className="panel">
           <h2 className="section-title">Бүх зээлэлтийн түүх</h2>
@@ -771,7 +824,7 @@ function BooksTable({ books, isLoading }) {
   );
 }
 
-function LoanList({ loans, isSaving, onReturnLoan, emptyText }) {
+function LoanList({ loans, isSaving, extendDaysByLoan = {}, onExtendDaysChange, onExtendLoan, onReturnLoan, emptyText }) {
   return (
     <div className="mt-3 space-y-3">
       {loans.map((loan) => (
@@ -780,8 +833,24 @@ function LoanList({ loans, isSaving, onReturnLoan, emptyText }) {
             <p className="font-medium">{loan.book?.title ?? `Ном #${loan.bookId}`}</p>
             <p className="text-xs text-slate-500">{loan.member?.name ?? `Гишүүн #${loan.memberId}`} - дуусах өдөр {formatDate(loan.dueAt)}</p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center justify-end gap-2">
             <span className={loan.status === "overdue" ? "status status-warn" : "status status-ok"}>{translateLoanStatus(loan.status)}</span>
+            {onExtendLoan ? (
+              <div className="flex items-center gap-2">
+                <input
+                  className="small-input"
+                  type="number"
+                  min="1"
+                  max="365"
+                  value={extendDaysByLoan[loan.id] ?? 7}
+                  onChange={(event) => onExtendDaysChange(loan.id, event.target.value)}
+                  aria-label="Сунгах хоног"
+                />
+                <button className="small-button" type="button" onClick={() => onExtendLoan(loan)} disabled={isSaving}>
+                  Сунгах
+                </button>
+              </div>
+            ) : null}
             <button className="small-button" type="button" onClick={() => onReturnLoan(loan)} disabled={isSaving}>
               Буцаах
             </button>

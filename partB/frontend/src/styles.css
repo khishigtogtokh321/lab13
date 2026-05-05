@@ -81,6 +81,10 @@
     @apply cursor-not-allowed bg-slate-400 hover:bg-slate-400;
   }
 
+  .small-input {
+    @apply h-8 w-20 rounded-md border border-slate-300 bg-white px-2 text-xs outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100;
+  }
+
   .status {
     @apply inline-flex items-center rounded-md px-2 py-1 text-xs font-semibold;
   }

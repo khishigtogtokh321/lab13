@@ -4,7 +4,9 @@ import {
   canLoanBook,
   computeLoanStatus,
   createLoanRecord,
+  extendLoanRecord,
   filterBooks,
+  normalizeLoanDays,
   returnLoanRecord,
   summarizeDashboard,
   validateBookInput,
@@ -45,6 +47,21 @@ test("createLoanRecord sets due date using loan period", () => {
   const loan = createLoanRecord({ book: availableBook, member: activeMember, borrowedAt: "2026-05-01T00:00:00.000Z", days: 7 });
   assert.equal(loan.dueAt, "2026-05-08T00:00:00.000Z");
   assert.equal(loan.status, "active");
+});
+
+test("createLoanRecord rejects invalid loan period", () => {
+  assert.throws(
+    () => createLoanRecord({ book: availableBook, member: activeMember, borrowedAt: "2026-05-01T00:00:00.000Z", days: 0 }),
+    /1-365/
+  );
+  assert.equal(normalizeLoanDays("21"), 21);
+});
+
+test("extendLoanRecord moves due date forward", () => {
+  const loan = createLoanRecord({ book: availableBook, member: activeMember, borrowedAt: "2026-05-01T00:00:00.000Z", days: 7 });
+  const extended = extendLoanRecord(loan, 5);
+  assert.equal(extended.dueAt, "2026-05-13T00:00:00.000Z");
+  assert.equal(extended.status, "active");
 });
 
 test("returnLoanRecord marks returned loan", () => {

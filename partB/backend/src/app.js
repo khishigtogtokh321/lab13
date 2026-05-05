@@ -4,6 +4,7 @@ import { createAuthRouter, parseAuthCookies } from "./auth.js";
 import {
   createLoanRecord,
   computeLoanStatus,
+  extendLoanRecord,
   filterBooks,
   summarizeDashboard,
   validateBookInput,
@@ -14,7 +15,9 @@ import {
   createLoan,
   createMember,
   findBookById,
+  findLoanById,
   findMemberById,
+  extendLoan,
   listBooks,
   listLoans,
   listMembers,
@@ -99,7 +102,8 @@ export function createApp() {
           "Сонгосон гишүүн олдсонгүй.",
           "Идэвхгүй гишүүнд ном зээлүүлэх боломжгүй.",
           "Энэ номын бэлэн хувь дууссан байна."
-        ].includes(error.message)
+        ].includes(error.message) ||
+        error.message.includes("1-365 хоногийн хооронд")
       ) {
         return res.status(400).json({ errors: [error.message] });
       }
@@ -113,6 +117,28 @@ export function createApp() {
       if (!loan) return res.status(404).json({ errors: ["Буцаах боломжтой идэвхтэй зээлэлт олдсонгүй."] });
       res.json(loan);
     } catch (error) {
+      next(error);
+    }
+  });
+
+  app.patch("/api/loans/:id/extend", async (req, res, next) => {
+    try {
+      const currentLoan = await findLoanById(req.params.id);
+      if (!currentLoan) return res.status(404).json({ errors: ["Сунгах боломжтой идэвхтэй зээлэлт олдсонгүй."] });
+      const extended = extendLoanRecord(currentLoan, req.body.days ?? 7);
+      const loan = await extendLoan(req.params.id, extended.dueAt);
+      if (!loan) return res.status(404).json({ errors: ["Сунгах боломжтой идэвхтэй зээлэлт олдсонгүй."] });
+      res.json(loan);
+    } catch (error) {
+      if (
+        [
+          "Зээлэлтийн бүртгэл олдсонгүй.",
+          "Буцаасан зээлэлтийг сунгах боломжгүй."
+        ].includes(error.message) ||
+        error.message.includes("1-365 хоногийн хооронд")
+      ) {
+        return res.status(400).json({ errors: [error.message] });
+      }
       next(error);
     }
   });

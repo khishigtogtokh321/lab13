@@ -120,3 +120,24 @@ export async function returnLoan(id, returnedAt) {
     return loan;
   });
 }
+
+export async function extendLoan(id, dueAt) {
+  return prisma.$transaction(async (tx) => {
+    const activeLoan = await tx.loan.findFirst({
+      where: { id: Number(id), returnedAt: null }
+    });
+    if (!activeLoan) return null;
+
+    return tx.loan.update({
+      where: { id: activeLoan.id },
+      data: {
+        dueAt,
+        status: "active"
+      }
+    });
+  });
+}
+
+export async function findLoanById(id) {
+  return prisma.loan.findUnique({ where: { id: Number(id) } });
+}

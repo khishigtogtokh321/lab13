@@ -94,11 +94,55 @@ paths:
           description: Loan list
     post:
       summary: Create loan
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [bookId, memberId]
+              properties:
+                bookId:
+                  type: integer
+                memberId:
+                  type: integer
+                days:
+                  type: integer
+                  minimum: 1
+                  maximum: 365
       responses:
         "201":
           description: Loan created
         "400":
           description: Loan blocked
+  /api/loans/{id}/extend:
+    patch:
+      summary: Extend an active loan
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                days:
+                  type: integer
+                  minimum: 1
+                  maximum: 365
+                  default: 7
+      responses:
+        "200":
+          description: Loan extended
+        "400":
+          description: Invalid extension period
+        "404":
+          description: Active loan not found
   /api/loans/{id}/return:
     patch:
       summary: Return a loan

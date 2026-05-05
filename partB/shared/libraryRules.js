@@ -34,15 +34,37 @@ export function canLoanBook(book, member) {
 export function createLoanRecord({ book, member, borrowedAt, days = 14 }) {
   const allowed = canLoanBook(book, member);
   if (!allowed.ok) throw new Error(allowed.reason);
+  const loanDays = normalizeLoanDays(days);
   const borrowed = new Date(borrowedAt);
   const due = new Date(borrowed);
-  due.setDate(due.getDate() + days);
+  due.setDate(due.getDate() + loanDays);
   return {
     bookId: book.id,
     memberId: member.id,
     borrowedAt: borrowed.toISOString(),
     dueAt: due.toISOString(),
     returnedAt: null,
+    status: LOAN_STATUSES.ACTIVE
+  };
+}
+
+export function normalizeLoanDays(days, label = "Зээлийн хугацаа") {
+  const value = Number(days);
+  if (!Number.isInteger(value) || value < 1 || value > 365) {
+    throw new Error(`${label} 1-365 хоногийн хооронд бүхэл тоо байх ёстой.`);
+  }
+  return value;
+}
+
+export function extendLoanRecord(loan, days = 7) {
+  if (!loan) throw new Error("Зээлэлтийн бүртгэл олдсонгүй.");
+  if (loan.returnedAt) throw new Error("Буцаасан зээлэлтийг сунгах боломжгүй.");
+  const extensionDays = normalizeLoanDays(days, "Сунгах хугацаа");
+  const due = new Date(loan.dueAt);
+  due.setDate(due.getDate() + extensionDays);
+  return {
+    ...loan,
+    dueAt: due.toISOString(),
     status: LOAN_STATUSES.ACTIVE
   };
 }
