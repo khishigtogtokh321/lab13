@@ -1,13 +1,13 @@
-# AI Session 01: Feature Planning
+# AI Session 01: Feature төлөвлөлт
 
-## Goal
+## Зорилго
 
-Plan an advanced mini library feature set that fits the assignment.
+Даалгаварт тохирох advanced mini library feature set төлөвлөх.
 
-## AI Output
+## AI output
 
-The AI suggested inventory CRUD, members, loans, returns, overdue status, dashboard summary, and search/filter.
+AI нь inventory CRUD, members, loans, returns, overdue status, dashboard summary, search/filter-ийг санал болгосон.
 
-## Human Review
+## Хүний review
 
-The chosen scope keeps the system realistic while avoiding authentication, payments, and deployment.
+Сонгосон scope нь authentication, payments, deployment зэргийг оруулахгүйгээр системийг бодит хэрэглээнд ойр байлгана.

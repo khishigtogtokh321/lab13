@@ -1,32 +1,32 @@
-# ADR-001: Stack Decision
+# ADR-001: Stack сонголтын шийдвэр
 
-## Status
+## Төлөв
 
-Accepted
+Зөвшөөрсөн
 
-## Context
+## Нөхцөл байдал
 
-The assignment requires a small project built with AI-assisted planning, implementation, testing, and reflection. The selected mini library topic needs a user interface, a REST API, relational data, and enough business rules to test.
+Даалгавар нь AI-assisted planning, implementation, testing, reflection бүхий жижиг төсөл шаарддаг. Сонгосон mini library topic нь хэрэглэгчийн interface, REST API, relational data, тестлэхэд хангалттай бизнес дүрэм шаарддаг.
 
-## Decision
+## Шийдвэр
 
-Use React with Tailwind CSS for the frontend, Node.js Express for the REST API, and PostgreSQL for the database.
+Frontend-д React + Tailwind CSS, REST API-д Node.js Express, өгөгдлийн санд PostgreSQL ашиглана.
 
-## Alternatives Considered
+## Харгалзсан өөр хувилбарууд
 
-- React + NestJS + PostgreSQL: better structure for enterprise apps but more boilerplate.
-- React + Django REST Framework + PostgreSQL: mature backend but adds a second language and more setup.
+- React + NestJS + PostgreSQL: enterprise app-д илүү сайн бүтэцтэй боловч boilerplate их.
+- React + Django REST Framework + PostgreSQL: backend нь төлөвшсөн боловч хоёр дахь хэл болон нэмэлт setup шаарддаг.
 
-## Consequences
+## Үр дагавар
 
-Positive:
+Эерэг:
 
-- Unified JavaScript ecosystem
-- Faster implementation
-- Easy REST API documentation with OpenAPI
-- PostgreSQL schema maps naturally to books, members, and loans
+- Нэгдсэн JavaScript ecosystem
+- Хурдан implementation
+- OpenAPI ашиглан REST API documentation хийхэд хялбар
+- PostgreSQL schema нь ном, гишүүн, зээлэлттэй байгалийн байдлаар тохирно
 
-Negative:
+Сөрөг:
 
-- Express structure must be enforced by convention
-- Validation, error handling, and security checks require deliberate implementation
+- Express structure-ийг convention-оор сахиулах шаардлагатай
+- Validation, error handling, security check-үүдийг санаатайгаар хэрэгжүүлэх хэрэгтэй

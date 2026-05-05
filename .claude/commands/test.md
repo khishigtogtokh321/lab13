@@ -1,11 +1,11 @@
 # /test
 
-Generate or improve tests using a testing pyramid approach.
+Testing pyramid approach ашиглан тест үүсгэх эсвэл сайжруулна.
 
-Required focus:
+Заавал анхаарах зүйлс:
 
-- Unit tests for domain rules
-- Edge cases for loan availability
-- Validation errors
-- Overdue calculation
+- Domain rule-ийн unit test
+- Зээлэх боломжийн edge case
+- Validation error
+- Хугацаа хэтэрсэн эсэхийг тооцоолох logic
 - Search/filter behavior

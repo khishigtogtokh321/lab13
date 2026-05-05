@@ -1,47 +1,47 @@
-# Stack Comparison
+# Stack-ийн харьцуулалт
 
-## Option 1: React + Express + PostgreSQL
+## Хувилбар 1: React + Express + PostgreSQL
 
-Strengths:
+Давуу тал:
 
-- One JavaScript ecosystem across frontend and backend
-- Fast to implement REST endpoints
-- PostgreSQL gives realistic relational modeling for books, members, and loans
-- Easy to test domain logic with Node.js test runner
+- Frontend болон backend хоёуланд нэг JavaScript ecosystem ашиглана.
+- REST endpoint хурдан хэрэгжүүлэх боломжтой.
+- PostgreSQL нь ном, гишүүн, зээлэлтийн relational model-д бодитой тохирно.
+- Node.js test runner ашиглан domain logic-ийг тестлэхэд хялбар.
 
-Weaknesses:
+Сул тал:
 
-- Express requires discipline for project structure
-- Validation and error handling must be designed manually
+- Express project structure-д сахилга шаарддаг.
+- Validation болон error handling-ийг гараар төлөвлөх хэрэгтэй.
 
-## Option 2: React + NestJS + PostgreSQL
+## Хувилбар 2: React + NestJS + PostgreSQL
 
-Strengths:
+Давуу тал:
 
-- Strong modular architecture
-- Built-in patterns for controllers, services, dependency injection
-- Looks professional for larger backend systems
+- Хүчтэй modular архитектуртай.
+- Controller, service, dependency injection-ийн built-in pattern-уудтай.
+- Том backend system-д илүү professional харагдана.
 
-Weaknesses:
+Сул тал:
 
-- More boilerplate than needed for a small assignment
-- Decorator-heavy structure may slow early implementation
+- Жижиг даалгаварт хэрэгтэйгээс илүү boilerplate их.
+- Decorator-heavy бүтэц нь эхний implementation-ийг удаашруулж магадгүй.
 
-## Option 3: React + Django REST Framework + PostgreSQL
+## Хувилбар 3: React + Django REST Framework + PostgreSQL
 
-Strengths:
+Давуу тал:
 
-- Mature backend framework
-- Django admin can help inspect data
-- Strong ORM and authentication support
+- Төлөвшсөн backend framework.
+- Django admin нь өгөгдөл шалгахад тусална.
+- ORM болон authentication support хүчтэй.
 
-Weaknesses:
+Сул тал:
 
-- Two-language stack adds complexity
-- Frontend and backend tooling are less unified
+- Хоёр хэлтэй stack нь төвөг нэмнэ.
+- Frontend/backend tooling нэг ecosystem биш.
 
-## Decision
+## Шийдвэр
 
-The selected stack is **React + Tailwind CSS + Express REST API + PostgreSQL**.
+Сонгосон stack: **React + Tailwind CSS + Express REST API + PostgreSQL**.
 
-This stack is advanced enough to demonstrate real full-stack architecture, but still small enough to finish within the assignment timeline. It supports a modern UI, REST API, relational data model, and focused unit tests.
+Энэ stack нь бодит full-stack архитектур харуулахад хангалттай advanced боловч даалгаврын хугацаанд дуусгахад хангалттай жижиг. Modern UI, REST API, relational data model, focused unit test-үүдийг дэмжинэ.

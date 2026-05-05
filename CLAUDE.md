@@ -1,17 +1,17 @@
 # CLAUDE.md
 
-## Project
+## Төсөл
 
-Mini Library Management System for F.CSM311 Lab 13.
+F.CSM311 Лаборатори 13-д зориулсан Mini Library Management System.
 
-## Stack
+## Технологийн стек
 
 - React + Tailwind CSS frontend
 - Node.js Express REST API
-- PostgreSQL database
-- Node.js built-in test runner
+- PostgreSQL өгөгдлийн сан
+- Node.js-ийн built-in test runner
 
-## Commands
+## Командууд
 
 ```bash
 npm install
@@ -21,24 +21,24 @@ npm test
 npm run build
 ```
 
-## Conventions
+## Баримтлах зарчим
 
-- Use Conventional Commits: `feat`, `fix`, `docs`, `test`, `refactor`, `chore`.
-- Keep Part A as planning only; do not place production code there.
-- Keep reusable business rules in `partB/shared/`.
-- Validate request bodies before database writes.
-- Keep database access behind repository functions.
-- Prefer small React components and derived state over duplicated state.
-- Write tests for loan availability, overdue status, validation, and search behavior.
+- Conventional Commits ашиглана: `feat`, `fix`, `docs`, `test`, `refactor`, `chore`.
+- Part A-г зөвхөн төлөвлөлтийн хэсэг байлгана; production код байрлуулахгүй.
+- Дахин ашиглагдах бизнес дүрмүүдийг `partB/shared/` дотор хадгална.
+- Өгөгдлийн санд бичихээс өмнө request body-г шалгана.
+- Өгөгдлийн сангийн хандалтыг repository функцүүдийн ард нууж хадгална.
+- Давхардсан state-ээс илүү жижиг React component болон derived state ашиглана.
+- Зээлэх боломж, хугацаа хэтэрсэн төлөв, validation, хайлт/шүүлтийн behavior-д тест бичнэ.
 
-## No-Go Zones
+## Хийж болохгүй зүйлс
 
-- Do not commit `.env` or database credentials.
-- Do not use raw SQL string concatenation with user input.
-- Do not delete assignment documents after implementation.
-- Do not claim AI-generated work as fully manual work.
-- Do not skip AI session logs.
+- `.env` эсвэл өгөгдлийн сангийн credential commit хийхгүй.
+- Хэрэглэгчийн input ашиглан raw SQL string залгахгүй.
+- Implementation дууссаны дараа даалгаврын бичиг баримтуудыг устгахгүй.
+- AI-аар үүсгэсэн ажлыг бүрэн гараар хийсэн мэт мэдүүлэхгүй.
+- AI session log-уудыг алгасахгүй.
 
-## AI Workflow
+## AI workflow
 
-Use the flow: spec -> generate -> review -> integrate. AI output must be checked for hallucinated package APIs, security issues, and assignment compliance.
+Дараах урсгалыг ашиглана: spec -> generate -> review -> integrate. AI output-ыг package API hallucination, security issue, даалгаврын шаардлагатай нийцэл талаас нь заавал шалгана.

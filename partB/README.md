@@ -1,26 +1,26 @@
 # Part B Implementation
 
-## Features
+## Боломжууд
 
-- Book inventory list, search, and category filter
-- Member data model and API endpoints
-- Loan creation and return workflow
-- Overdue loan status tracking
-- Dashboard summary metrics
-- Admin authentication API with JWT stored in an httpOnly cookie
-- Prisma ORM schema and Prisma Studio database UI
+- Номын inventory жагсаалт, хайлт, ангиллын шүүлт
+- Гишүүний data model болон API endpoint-ууд
+- Зээлэлт үүсгэх болон буцаах workflow
+- Хугацаа хэтэрсэн зээлэлтийн төлөв хянах
+- Dashboard summary metric-үүд
+- JWT-г httpOnly cookie-д хадгалдаг admin authentication API
+- Prisma ORM schema болон Prisma Studio database UI
 
-## Structure
+## Бүтэц
 
 - `frontend/` - React + Tailwind UI
-- `backend/` - Express API and PostgreSQL schema
-- `../prisma/schema.prisma` - Prisma database model used by the backend
-- `shared/` - testable domain logic
-- `tests/` - Node.js unit tests
+- `backend/` - Express API болон PostgreSQL schema
+- `../prisma/schema.prisma` - backend-д ашиглагдах Prisma database model
+- `shared/` - тестлэх боломжтой domain logic
+- `tests/` - Node.js unit test-үүд
 - `openapi.yaml` - REST API specification
-- `ai-sessions/` - summarized AI build sessions
+- `ai-sessions/` - AI build session-үүдийн хураангуй
 
-## Commands
+## Командууд
 
 ```bash
 npm install
@@ -31,9 +31,9 @@ npm run test:api-smoke
 npx prisma studio
 ```
 
-## Environment
+## Орчны тохиргоо
 
-Create `.env` locally for the backend:
+Backend-д зориулж локал `.env` үүсгэнэ:
 
 ```bash
 DATABASE_URL=postgres://postgres:postgres@localhost:5432/mini_library
@@ -43,13 +43,13 @@ ADMIN_PASSWORD=admin12345
 PORT=4000
 ```
 
-Authentication endpoints:
+Authentication endpoint-ууд:
 
-- `POST /api/auth/login` with `{ "email": "admin@example.com", "password": "admin12345" }`
+- `POST /api/auth/login` request body: `{ "email": "admin@example.com", "password": "admin12345" }`
 - `POST /api/auth/logout`
 - `GET /api/auth/me`
 
-On first successful development login using `ADMIN_EMAIL` and `ADMIN_PASSWORD`, the backend creates the admin row with a bcrypt password hash.
+Development үед `ADMIN_EMAIL` болон `ADMIN_PASSWORD` ашиглан анх амжилттай login хийхэд backend нь bcrypt password hash-тэй admin row үүсгэнэ.
 
 API smoke check:
 
@@ -57,4 +57,4 @@ API smoke check:
 npm run test:api-smoke
 ```
 
-Run it while the backend is available. It checks health, auth login/me/logout, book/member creation, loan creation, loan extension, loan return, loan list, and dashboard summary.
+Backend ажиллаж байх үед ажиллуулна. Энэ нь health, auth login/me/logout, book/member creation, loan creation, loan extension, loan return, loan list, dashboard summary-г шалгана.

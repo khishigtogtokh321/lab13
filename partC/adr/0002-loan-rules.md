@@ -1,26 +1,26 @@
-# ADR-002: Keep Loan Rules In Shared Domain Functions
+# ADR-002: Зээлийн дүрмүүдийг shared domain function-д хадгалах
 
-## Status
+## Төлөв
 
-Accepted
+Зөвшөөрсөн
 
-## Context
+## Нөхцөл байдал
 
-The library system needs rules for loan eligibility, available copies, return behavior, overdue status, filtering, and dashboard counts. These rules could be placed directly inside Express routes or React components, but that would make them harder to test and explain.
+Номын сангийн системд loan eligibility, available copies, return behavior, overdue status, filtering, dashboard count зэрэг дүрмүүд хэрэгтэй. Эдгээр дүрмийг шууд Express route эсвэл React component дотор байрлуулж болох боловч тэгвэл тестлэх, тайлбарлахад хэцүү болно.
 
-## Decision
+## Шийдвэр
 
-Keep core business rules in `partB/shared/libraryRules.js`. Express routes call these functions, and unit tests import them directly.
+Гол бизнес дүрмүүдийг `partB/shared/libraryRules.js` дотор хадгална. Express route-ууд эдгээр функцийг дуудна, unit test-үүд шууд import хийж шалгана.
 
-## Consequences
+## Үр дагавар
 
-Positive:
+Эерэг:
 
-- Unit tests do not need a running database or web server.
-- The most important logic is easy to explain during assessment.
-- Frontend, backend, and tests can share the same rule definitions when needed.
+- Unit test ажиллуулахад database эсвэл web server шаардлагагүй.
+- Үнэлгээний үед хамгийн чухал logic-ийг тайлбарлахад хялбар.
+- Frontend, backend, tests шаардлагатай үед нэг rule definition-ийг хуваалцаж чадна.
 
-Negative:
+Сөрөг:
 
-- The shared module must remain framework-independent.
-- Future database-level constraints must stay consistent with these rules.
+- Shared module framework-independent хэвээр байх ёстой.
+- Ирээдүйн database-level constraint-үүд эдгээр rule-тэй нийцтэй байх шаардлагатай.

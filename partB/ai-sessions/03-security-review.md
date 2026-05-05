@@ -1,13 +1,13 @@
-# AI Session 03: Security Review
+# AI Session 03: Security review
 
-## Goal
+## Зорилго
 
-Check common security and reliability issues before finalizing Part B.
+Part B-г эцэслэхээс өмнө нийтлэг security болон reliability асуудлуудыг шалгах.
 
-## AI Output
+## AI output
 
-The AI highlighted SQL injection, missing validation, secret leakage, and unhandled errors.
+AI нь SQL injection, validation дутуу байх, secret leakage, unhandled error зэрэг асуудлыг онцолсон.
 
-## Human Review
+## Хүний review
 
-The backend uses parameterized queries, `.env` is ignored, request validation is added, and API errors return structured JSON.
+Backend нь parameterized query ашигладаг, `.env` ignore хийгдсэн, request validation нэмэгдсэн, API error-ууд structured JSON буцаадаг.

@@ -1,23 +1,23 @@
-# AI Planning Session Summary
+# AI төлөвлөлтийн session-ийн хураангуй
 
-## Prompt
+## Prompt буюу хэрэглэгчийн хүсэлт
 
-The student asked for a more advanced project using React, Tailwind, REST API, and PostgreSQL, then selected the Mini Library topic.
+Оюутан React, Tailwind, REST API, PostgreSQL ашигласан илүү advanced төсөл хүсэж, дараа нь Mini Library topic-ийг сонгосон.
 
-## Compared Stacks
+## Харьцуулсан stack-ууд
 
 1. React + Express + PostgreSQL
 2. React + NestJS + PostgreSQL
 3. React + Django REST Framework + PostgreSQL
 
-## AI Recommendation
+## AI-ийн зөвлөмж
 
-The AI recommended React + Express + PostgreSQL because it provides a realistic full-stack system while keeping the implementation manageable for the assignment.
+AI нь React + Express + PostgreSQL-ийг санал болгосон. Учир нь энэ нь бодит full-stack system бүтээх боломж өгч, implementation-ийг даалгаварт тохирох хэмжээнд барина.
 
-## Human Decision
+## Хүний шийдвэр
 
-The student accepted Mini Library as the topic and Node Express as the backend framework.
+Оюутан Mini Library-г topic болгон, Node Express-ийг backend framework болгон зөвшөөрсөн.
 
-## Final Plan
+## Эцсийн төлөвлөгөө
 
-Build a mini library management system with inventory, members, loans, returns, overdue tracking, dashboard, OpenAPI spec, tests, and reflection documents.
+Inventory, members, loans, returns, overdue tracking, dashboard, OpenAPI spec, tests, reflection documents бүхий mini library management system бүтээнэ.

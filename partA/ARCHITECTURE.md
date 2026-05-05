@@ -1,12 +1,12 @@
-# Architecture
+# Архитектур
 
-## Overview
+## Ерөнхий тойм
 
-The system uses a classic three-layer web architecture: React frontend, Express REST API, and PostgreSQL database. Business rules for loan availability and overdue status are kept separate from UI code so they can be tested directly.
+Систем нь React frontend, Express REST API, PostgreSQL өгөгдлийн сан гэсэн сонгодог гурван давхар web архитектур ашиглана. Зээлэх боломж болон хугацаа хэтэрсэн төлөвийн бизнес дүрмүүдийг UI кодоос тусгаарласан тул шууд тестлэх боломжтой.
 
 ```mermaid
 flowchart LR
-    User[Librarian] --> UI[React + Tailwind Frontend]
+    User[Номын санч] --> UI[React + Tailwind Frontend]
     UI -->|HTTP JSON| API[Express REST API]
     API --> Validation[Validation + Domain Rules]
     Validation --> Repo[Repository Layer]
@@ -16,17 +16,17 @@ flowchart LR
     API --> UI
 ```
 
-## Modules
+## Module-ууд
 
 - Frontend app: dashboard, inventory table, members, loans, search/filter controls
-- REST API: routes for books, members, loans, dashboard summary
-- Domain rules: validates copies, loan creation, return flow, overdue status
-- Database layer: PostgreSQL tables and parameterized queries
+- REST API: books, members, loans, dashboard summary route-ууд
+- Domain rules: copy тоо, loan creation, return flow, overdue status-ыг validate хийнэ
+- Database layer: PostgreSQL table-ууд болон parameterized query
 
-## Data Flow
+## Өгөгдлийн урсгал
 
-1. Librarian searches inventory or starts a loan.
-2. React sends JSON request to the Express API.
-3. API validates input and calls domain rules.
-4. Repository reads or writes PostgreSQL records.
-5. API returns a JSON response with updated state.
+1. Номын санч inventory хайх эсвэл зээлэлт эхлүүлнэ.
+2. React нь Express API руу JSON request илгээнэ.
+3. API input-ыг шалгаад domain rule-үүдийг дуудна.
+4. Repository PostgreSQL record унших эсвэл бичих үйлдэл хийнэ.
+5. API шинэчлэгдсэн төлөвтэй JSON response буцаана.

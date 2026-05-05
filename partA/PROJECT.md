@@ -1,37 +1,37 @@
-# Project Brief
+# Төслийн товч танилцуулга
 
-## Title
+## Гарчиг
 
 Advanced Mini Library Management System
 
-## Goal
+## Зорилго
 
-Build a small but realistic library operations system that helps a librarian manage books, members, borrowing, returning, overdue loans, and inventory search.
+Номын санч ном, гишүүн, зээлэлт, буцаалт, хугацаа хэтэрсэн зээлэлт болон inventory хайлтыг удирдах боломжтой жижиг боловч бодит хэрэглээнд ойр номын сангийн үйл ажиллагааны систем бүтээнэ.
 
-## Scope
+## Хамрах хүрээ
 
-The system will include:
+Системд дараах зүйлс багтана:
 
-- Book inventory CRUD with ISBN, category, total copies, and available copies
-- Member management with contact and active/inactive status
-- Loan creation and return workflow
-- Overdue tracking based on due date and return status
-- Dashboard summary and search/filter interface
+- ISBN, ангилал, нийт хувь, бэлэн хувьтай номын inventory CRUD
+- Холбоо барих мэдээлэл болон идэвхтэй/идэвхгүй төлөвтэй гишүүний удирдлага
+- Зээлэлт үүсгэх болон буцаах workflow
+- Дуусах өдөр болон буцаасан төлөв дээр үндэслэсэн хугацаа хэтэрсэн зээлэлтийн хяналт
+- Dashboard summary болон хайлт/шүүлтийн interface
 
-## Out of Scope
+## Хамрахгүй зүйлс
 
-- Online payment or fine collection
+- Онлайн төлбөр эсвэл торгууль авах
 - Barcode scanner integration
-- Multi-branch library support
-- User authentication beyond a future placeholder
-- Production deployment
+- Олон салбартай номын сангийн дэмжлэг
+- Ирээдүйн placeholder-оос цааших хэрэглэгчийн authentication
+- Бүтээгдэхүүний deployment
 
-## Target Users
+## Зорилтот хэрэглэгчид
 
-Small library staff or school library assistants who need a simple web-based workflow for daily book circulation.
+Өдөр тутмын номын эргэлтийг энгийн web-based workflow-оор удирдах шаардлагатай жижиг номын сангийн ажилтан эсвэл сургуулийн номын сангийн туслах.
 
-## Success Criteria
+## Амжилтын шалгуур
 
-- The planned architecture supports a React UI, REST API, and PostgreSQL persistence.
-- The build phase can deliver at least 3 working features with 10+ unit tests.
-- AI usage, decisions, and verification are documented honestly.
+- Төлөвлөсөн архитектур нь React UI, REST API, PostgreSQL persistence-ийг дэмждэг байх.
+- Бүтээх үе шатанд дор хаяж 3 ажилладаг feature болон 10-аас дээш unit test гаргах боломжтой байх.
+- AI ашиглалт, шийдвэрүүд, verification-ийг үнэн зөв баримтжуулсан байх.

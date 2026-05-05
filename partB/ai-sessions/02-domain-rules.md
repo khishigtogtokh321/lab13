@@ -1,13 +1,13 @@
-# AI Session 02: Domain Rules
+# AI Session 02: Domain rule-үүд
 
-## Goal
+## Зорилго
 
-Design business rules that can be tested without a database.
+Өгөгдлийн сангүйгээр тестлэх боломжтой бизнес дүрмүүдийг төлөвлөх.
 
-## AI Output
+## AI output
 
-The AI proposed separate functions for validation, loan eligibility, loan creation, return flow, overdue status, filtering, and dashboard summaries.
+AI нь validation, loan eligibility, loan creation, return flow, overdue status, filtering, dashboard summary-д зориулсан тусдаа функцүүд санал болгосон.
 
-## Human Review
+## Хүний review
 
-The rules were kept in `partB/shared/` so tests do not depend on Express, React, or PostgreSQL.
+Rule-үүдийг `partB/shared/` дотор хадгалсан тул тестүүд Express, React, PostgreSQL-оос хамаарахгүй.

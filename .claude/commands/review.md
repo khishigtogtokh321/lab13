@@ -1,11 +1,11 @@
 # /review
 
-Review the current changes for security, robustness, assignment compliance, and maintainability.
+Одоогийн өөрчлөлтийг security, robustness, даалгаврын шаардлага, maintainability талаас нь review хийнэ.
 
-Focus on:
+Төвлөрөх зүйлс:
 
 - Input validation
-- SQL injection risks
+- SQL injection эрсдэл
 - Error handling
-- Test coverage gaps
-- Missing AI usage disclosure
+- Test coverage gap
+- AI usage disclosure дутуу эсэх

@@ -1,16 +1,16 @@
 # Part A README
 
-This folder contains the planning deliverables for the Mini Library Management System.
+Энэ хавтас нь Mini Library Management System төслийн төлөвлөлтийн deliverable-уудыг агуулна.
 
-## Contents
+## Агуулга
 
-- `PROJECT.md` - goal, users, scope, success criteria
-- `ARCHITECTURE.md` - Mermaid diagram and module descriptions
-- `STACK-COMPARISON.md` - three stack options and final decision
-- `adr/0001-stack-decision.md` - architecture decision record
-- `ai-sessions/plan.md` - summarized AI planning session
+- `PROJECT.md` - зорилго, хэрэглэгчид, хамрах хүрээ, амжилтын шалгуур
+- `ARCHITECTURE.md` - Mermaid diagram болон module-ийн тайлбар
+- `STACK-COMPARISON.md` - гурван stack хувилбар болон эцсийн шийдвэр
+- `adr/0001-stack-decision.md` - архитектурын шийдвэрийн тэмдэглэл
+- `ai-sessions/plan.md` - AI төлөвлөлтийн session-ийн хураангуй
 
-## Planned Build Commands
+## Төлөвлөсөн build command-ууд
 
 ```bash
 npm install
@@ -19,10 +19,10 @@ npm run dev:backend
 npm test
 ```
 
-## Planned Features
+## Төлөвлөсөн боломжууд
 
-- Book inventory
-- Member management
-- Loan and return workflow
-- Overdue tracking
-- Search/filter dashboard
+- Номын inventory
+- Гишүүний удирдлага
+- Зээлэлт болон буцаалтын workflow
+- Хугацаа хэтэрсэн бүртгэл хянах
+- Хайлт/шүүлттэй dashboard
