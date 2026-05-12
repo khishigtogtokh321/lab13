@@ -12,10 +12,10 @@
 
 ## Бүтэц
 
-- `frontend/` - React + Tailwind UI
-- `backend/` - Express API болон PostgreSQL schema
+- `src/frontend/` - React + Tailwind UI
+- `src/backend/` - Express API болон PostgreSQL schema
 - `../prisma/schema.prisma` - backend-д ашиглагдах Prisma database model
-- `shared/` - тестлэх боломжтой domain logic
+- `src/shared/` - тестлэх боломжтой domain logic
 - `tests/` - Node.js unit test-үүд
 - `openapi.yaml` - REST API specification
 - `ai-sessions/` - AI build session-үүдийн хураангуй

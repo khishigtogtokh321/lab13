@@ -53,14 +53,14 @@ npm ci
 npx prisma generate
 npx prisma migrate deploy
 npm run build
-NODE_ENV=production node partB/backend/src/server.js
+NODE_ENV=production node partB/src/backend/src/server.js
 ```
 
 Windows PowerShell дээр:
 
 ```powershell
 $env:NODE_ENV="production"
-node partB/backend/src/server.js
+node partB/src/backend/src/server.js
 ```
 
 ## Docker

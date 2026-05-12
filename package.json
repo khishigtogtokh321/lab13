@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev:frontend": "vite --host 127.0.0.1 partB/frontend",
-    "dev:frontend:docker": "vite --host 0.0.0.0 partB/frontend",
-    "dev:backend": "node --watch partB/backend/src/server.js",
+    "dev:frontend": "vite --host 127.0.0.1 partB/src/frontend",
+    "dev:frontend:docker": "vite --host 0.0.0.0 partB/src/frontend",
+    "dev:backend": "node --watch partB/src/backend/src/server.js",
     "docker:dev": "docker compose up --build",
     "docker:studio": "docker compose exec app npx prisma studio --hostname 0.0.0.0",
     "prisma:generate": "prisma generate",
@@ -14,7 +14,7 @@
     "prisma:studio": "prisma studio",
     "test": "node --test \"partB/tests/**/*.test.js\"",
     "test:api-smoke": "node partB/scripts/api-smoke.js",
-    "build": "vite build partB/frontend --outDir ../../dist/frontend",
+    "build": "vite build partB/src/frontend --outDir ../../../dist/frontend",
     "lint": "eslint partB --ext .js,.jsx"
   },
   "dependencies": {

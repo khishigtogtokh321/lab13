@@ -10,4 +10,4 @@ AI нь validation, loan eligibility, loan creation, return flow, overdue status
 
 ## Хүний review
 
-Rule-үүдийг `partB/shared/` дотор хадгалсан тул тестүүд Express, React, PostgreSQL-оос хамаарахгүй.
+Rule-үүдийг `partB/src/shared/` дотор хадгалсан тул тестүүд Express, React, PostgreSQL-оос хамаарахгүй.

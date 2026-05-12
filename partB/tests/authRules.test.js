@@ -7,7 +7,7 @@ import {
   isActiveAdmin,
   normalizeLoginCredentials,
   publicAdmin
-} from "../backend/src/authRules.js";
+} from "../src/backend/src/authRules.js";
 
 test("login credentials are trimmed and normalized", () => {
   assert.deepEqual(normalizeLoginCredentials({ email: " Admin@Example.COM ", password: "secret" }), {

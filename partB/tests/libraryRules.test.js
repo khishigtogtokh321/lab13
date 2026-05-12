@@ -11,7 +11,7 @@ import {
   summarizeDashboard,
   validateBookInput,
   validateMemberInput
-} from "../shared/libraryRules.js";
+} from "../src/shared/libraryRules.js";
 
 const activeMember = { id: 1, name: "Ariun", email: "ariun@example.com", status: "active" };
 const inactiveMember = { id: 2, name: "Bold", email: "bold@example.com", status: "inactive" };

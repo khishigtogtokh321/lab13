@@ -25,7 +25,7 @@ npm run build
 
 - Conventional Commits ашиглана: `feat`, `fix`, `docs`, `test`, `refactor`, `chore`.
 - Part A-г зөвхөн төлөвлөлтийн хэсэг байлгана; production код байрлуулахгүй.
-- Дахин ашиглагдах бизнес дүрмүүдийг `partB/shared/` дотор хадгална.
+- Дахин ашиглагдах бизнес дүрмүүдийг `partB/src/shared/` дотор хадгална.
 - Өгөгдлийн санд бичихээс өмнө request body-г шалгана.
 - Өгөгдлийн сангийн хандалтыг repository функцүүдийн ард нууж хадгална.
 - Давхардсан state-ээс илүү жижиг React component болон derived state ашиглана.

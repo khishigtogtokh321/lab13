@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { createLoanWithTx, extendLoanWithTx, returnLoanWithTx } from "../backend/src/repositories.js";
+import { createLoanWithTx, extendLoanWithTx, returnLoanWithTx } from "../src/backend/src/repositories.js";
 
 function createMockTx({ activeLoan = { id: 7, bookId: 3 }, updatedLoan } = {}) {
   const calls = [];

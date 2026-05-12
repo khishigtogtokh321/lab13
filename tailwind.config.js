@@ -1,5 +1,5 @@
 export default {
-  content: ["./partB/frontend/**/*.{html,js,jsx}"],
+  content: ["./partB/src/frontend/**/*.{html,js,jsx}"],
   theme: {
     extend: {}
   },

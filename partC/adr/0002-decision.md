@@ -10,7 +10,7 @@
 
 ## Шийдвэр
 
-Гол бизнес дүрмүүдийг `partB/shared/libraryRules.js` дотор хадгална. Express route-ууд эдгээр функцийг дуудна, unit test-үүд шууд import хийж шалгана.
+Гол бизнес дүрмүүдийг `partB/src/shared/libraryRules.js` дотор хадгална. Express route-ууд эдгээр функцийг дуудна, unit test-үүд шууд import хийж шалгана.
 
 ## Үр дагавар
 
